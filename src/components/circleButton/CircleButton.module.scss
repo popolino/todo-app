@@ -1,0 +1,25 @@
+@import "src/assets/scss/global.scss";
+.circle {
+  border-radius: 50%;
+  width: 7rem;
+  height: 7rem;
+  background: getColor(blue);
+  box-shadow:  0px 10px 15px getColor(shadow);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.vertical{
+  background: getColor(main-background);
+  height: 2rem;
+  width: 0.15rem;
+  border-radius: 0.5rem;
+}
+.horizontal{
+  position: absolute;
+  background: getColor(main-background);
+  width: 2rem;
+  height: 0.15rem;
+  border-radius: 0.5rem;
+}

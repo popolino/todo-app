@@ -1,0 +1,24 @@
+@import "src/assets/scss/global.scss";
+.category{
+  box-shadow:  0px 4px 10px getColor(shadow);
+  border-radius: 2rem;
+  padding: 2rem 1.3rem 1.5rem;
+  margin-right: 2rem;
+  min-width: 19rem;
+  height: 100%;
+  background-color: getColor(main-background);
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+}
+.tasks{
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: getColor(foreground);
+}
+.name{
+  padding: 1rem 0 2rem ;
+  font-weight: 600;
+  font-size: 2rem;
+  text-transform: capitalize;
+}

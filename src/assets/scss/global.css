@@ -1,0 +1,40 @@
+:root {
+  --violet: #d313e5;
+  --blue: #066aff;
+  --white: #ffffff;
+  --background: #f0f4fb;
+  --main: #0e1f54;
+  --foreground: #7e8db7;
+  --red: #e15252;
+  --default-icon: #7e8db7;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --violet: #d313e5;
+    --blue: #066aff;
+    --white: #ffffff;
+    --background: #e15252;
+    --main: #0e1f54;
+    --foreground: #7e8db7;
+    --red: #e15252;
+    --default-icon: #c0ccee;
+  }
+}
+.container {
+  max-width: 80rem;
+  width: 100%;
+  padding: 0 3rem;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.3rem;
+  padding: 2.4rem 0 1.4rem 0;
+}
+
+body {
+  background-color: var(--background);
+}
+
+/*# sourceMappingURL=global.css.map */
