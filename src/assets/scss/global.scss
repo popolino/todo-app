@@ -1,6 +1,14 @@
 @import "light_theme";
 @import "dark_theme";
+@import "variables";
+@import "overrides";
 
+*, *:after, *:before {
+  font-size: calc(10px);
+  font-family: 'Inter', sans-serif !important;
+  box-sizing: border-box;
+  color: getColor(main-text);
+}
 :root {
   @each $name, $color in $light-theme {
     --#{$name}: #{$color};
@@ -19,9 +27,14 @@
 .container {
   max-width: 80rem;
   width: 100%;
-  padding: 0 3rem;
+  padding: 0 $main-gap;
 }
-
+.main-container{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .title {
 color: getColor(foreground);
   font-weight: 700;
@@ -30,5 +43,42 @@ color: getColor(foreground);
 }
 body {
   background-color: getColor(background);
+  overflow: hidden;
 
+
+}
+.vertical{
+  background: getColor(white);
+  height: 2rem;
+  width: 0.15rem;
+  border-radius: 0.5rem;
+}
+.horizontal{
+  position: absolute;
+  background: getColor(white);
+  width: 2rem;
+  height: 0.15rem;
+  border-radius: 0.5rem;
+}
+.preloader{
+  stroke: getColor(white);
+  width: 2.5rem;
+}
+.circle-container{
+  position: fixed;
+  bottom: 4rem;
+  left: 0;
+  margin: auto;
+  right: 0;
+  display: flex;
+  justify-content: end;
+}
+.layout{
+  height: calc(100vh - 4rem);
+  //overflow-y: scroll;
+  position: relative;
+}
+.chapter{
+    font-size: 3.6rem;
+    font-weight: 600;
 }

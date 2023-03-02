@@ -1,17 +1,17 @@
 import React from "react";
 import classes from "./CircleButton.module.scss";
-import { colors, TColors } from "../../consts/colors";
+import clsx from "clsx";
 
-export type TCircleButtonProps = {
-  icon: React.JSXElementConstructor<any>;
-  onChange: () => void;
+type TCircleButtonProps = {
+  icon: any;
+  className?: string;
+  onChange?: () => void;
 };
-const CircleButton = () => {
-  return (
-    <div className={classes.circle}>
-      <div className={classes.vertical}></div>
-      <div className={classes.horizontal}></div>
-    </div>
-  );
+const CircleButton: React.FC<TCircleButtonProps> = ({
+  className,
+  icon,
+  onChange,
+}) => {
+  return <div className={clsx(classes.circle, className)}>{icon}</div>;
 };
 export default CircleButton;

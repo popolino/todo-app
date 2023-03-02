@@ -1,0 +1,28 @@
+.input{
+  .MuiInputBase-root{
+    height: 4rem;
+    border-radius: 2rem;
+  }
+  .MuiInputBase-colorPrimary{
+    outline: red!important;
+  }
+  .MuiOutlinedInput-notchedOutline{
+    border-color: red!important;
+    border-radius: 2rem;
+
+  }
+  .Mui-focused{
+    color: red!important;
+    border: red!important;
+  }
+  .css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root{
+    font-size: 1.6rem !important;
+  }
+  .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+    font-size: 1.6rem !important;
+    padding-bottom: 2rem !important;
+  }
+  .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root{
+    transform: translate(2rem, 1rem) scale(1) !important;
+  }
+}

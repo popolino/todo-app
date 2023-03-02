@@ -1,12 +1,15 @@
 import React from "react";
 import "src/assets/scss/reset.scss";
 import "./assets/scss/global.scss";
-import Main from "src/features/main/Main";
+import Settings from "./features/settings/Settings";
+import Header from "./features/main/header/Header";
 
 function App() {
   return (
     <div>
-      <Main />
+      <Header />
+      {/*<Main />*/}
+      <Settings />
     </div>
   );
 }
