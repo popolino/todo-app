@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import classes from "./Categories.module.scss";
 
 import Category from "./category/Category";
@@ -35,7 +35,7 @@ const Categories = () => {
   return (
     <>
       <div className="container">
-        <div className={classes.status}>What’s up, Joy?</div>
+        <div className="chapter">What’s up, Joy?</div>
         <div className="title">CATEGORIES</div>
       </div>
       <div className={classes.gradient}>

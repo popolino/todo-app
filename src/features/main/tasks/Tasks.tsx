@@ -31,7 +31,18 @@ const Tasks = () => {
           <Task key={task.id} text={task.text} color={task.color} />
         ))}
       </div>
-      <CircleButton />
+      <div className="container circle-container">
+        <CircleButton
+          className="circle-button"
+          icon={
+            <SvgSelector id="preloader" className="preloader" />
+            // <>
+            //   <div className="vertical" />
+            //   <div className="horizontal" />
+            // </>
+          }
+        />
+      </div>
     </div>
   );
 };

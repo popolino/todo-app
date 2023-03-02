@@ -1,10 +1,5 @@
 @import "src/assets/scss/global";
-*, *:after, *:before {
-  font-size: calc(10px);
-  font-family: 'Inter', sans-serif;
-  box-sizing: border-box;
-  color: getColor(main-text);
-}
+
 * {
   padding: 0;
   margin: 0;
@@ -46,7 +41,7 @@ button {
 
 button::-moz-focus-inner {
   padding: 0;
-  borer: 0;
+  border: 0;
 }
 
 a, a:visited {
