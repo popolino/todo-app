@@ -56,6 +56,10 @@
 }
 body {
   background-color: getColor(background);
+  overflow-y: hidden;
+}
+main{
+  display: flex;
 }
 .vertical {
   background: getColor(white);
@@ -86,6 +90,7 @@ body {
 .layout {
   height: calc(100vh - 4rem);
   position: relative;
+
 }
 .chapter {
   font-size: 3.6rem;

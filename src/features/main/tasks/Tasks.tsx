@@ -5,13 +5,7 @@ import clsx from "clsx";
 import { TColors } from "../../../consts/colors";
 import SvgSelector from "../../../components/svgSelector/SvgSelector";
 import CircleButton from "../../../components/circleButton/CircleButton";
-import {
-  Box,
-  IconButton,
-  Menu,
-  MenuItem,
-  Modal,
-} from "@mui/material";
+import { Box, IconButton, Menu, MenuItem, Modal } from "@mui/material";
 
 type TTask = {
   id: string;
