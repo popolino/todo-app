@@ -1,19 +1,14 @@
-@import "src/assets/scss/global.scss";
-
-.tasks{
+.tasks {
   display: flex;
   flex-direction: column;
   align-items: start;
-  //position: relative;
 }
-.list{
+.list {
   width: 100%;
   overflow-y: auto;
   -ms-overflow-style: none;
-
 }
 .list::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
-

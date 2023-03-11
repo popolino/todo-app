@@ -3,11 +3,9 @@ import Tasks from "./tasks/Tasks";
 import Categories from "./categories/Categories";
 
 const Main = () => (
-  <div className="layout">
-    <div className="main-container">
-      <Categories />
-      <Tasks />
-    </div>
+  <div className="layout main-container">
+    <Categories />
+    <Tasks />
   </div>
 );
 export default Main;

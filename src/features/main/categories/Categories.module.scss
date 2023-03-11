@@ -1,39 +1,39 @@
-@import "src/assets/scss/global.scss";
+@import "src/assets/scss/functions";
 
-.categories{
+.categories {
   max-width: 100vw;
   width: 80rem;
   display: flex;
   overflow-x: scroll;
   justify-content: space-between;
-  & > div:first-child{
+  & > div:first-child {
     margin-left: 3rem;
   }
-  & > div:last-child{
+  & > div:last-child {
     margin-right: 3rem;
   }
 }
-
 
 .categories::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
-.gradient{
+.gradient {
   position: relative;
-  &:before, &:after{
+  &:before,
+  &:after {
     content: "";
     position: absolute;
     height: 100%;
     width: 3rem;
     top: 0;
   }
-  &:before{
+  &:before {
     left: 0;
     background: linear-gradient(90deg, getColor(background), transparent);
   }
-  &:after{
+  &:after {
     right: 0;
-    background: linear-gradient(90deg, transparent,getColor(background));
+    background: linear-gradient(90deg, transparent, getColor(background));
   }
 }

@@ -8,7 +8,14 @@ $light-theme: (
   red: #e15252,
   default-icon: #7e8db7,
   shadow: rgba(126, 141, 183, 0.2),
-    main-text:#0E1F54,
-    progress:#D7DDEC,
-    white:#ffffff
+  main-text: #0e1f54,
+  progress: #d7ddec,
+  white: #ffffff,
+  shadow-blue: rgba(6, 106, 255, 0.25),
+  checkbox: #7e8db7,
+  hover: rgba(126, 141, 183, 0.1),
+  nabvar-background: #0e1f54,
+  navbar-icon: #526496,
+    navbar-title: #FFFFFFCC,
+    navbar-hover: rgba(0, 0, 0, 0.15)
 );

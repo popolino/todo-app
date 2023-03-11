@@ -1,0 +1,18 @@
+@import "src/assets/scss/functions";
+
+.part{
+  display: flex;
+  align-items: center;
+}
+
+svg{
+  height: 1.6rem;
+}
+.request{
+  display: flex;
+  justify-content: space-between;
+}
+.iconButton{
+  height: 4rem;
+  width: 4rem;
+}

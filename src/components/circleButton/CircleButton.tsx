@@ -10,7 +10,7 @@ type TCircleButtonProps = {
 const CircleButton: React.FC<TCircleButtonProps> = ({
   className,
   icon,
-  onChange,
+  onChange = () => {},
 }) => {
   return <div className={clsx(classes.circle, className)}>{icon}</div>;
 };
