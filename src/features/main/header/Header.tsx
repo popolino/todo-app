@@ -4,7 +4,11 @@ import SvgSelector from "../../../components/svgSelector/SvgSelector";
 import { IconButton } from "@mui/material";
 import { useThemeDetector } from "../../../hooks";
 
-const Header = () => {
+type THeaderProps = {
+  onOpen: () => void;
+};
+
+const Header: React.FC<THeaderProps> = ({ onOpen }) => {
   const localStorageTheme = window.localStorage.getItem("theme");
   const systemTheme = useThemeDetector() ? "dark" : "light";
   const [theme, setTheme] = useState(
@@ -17,9 +21,13 @@ const Header = () => {
 
   return (
     <header>
-      <div>
+      <IconButton
+        classes={{ sizeLarge: classes["icon-button"] }}
+        size="large"
+        onClick={onOpen}
+      >
         <SvgSelector id="burger" className={classes.burger} />
-      </div>
+      </IconButton>
       <div className={classes.right}>
         <IconButton
           classes={{ sizeLarge: classes["icon-button"] }}

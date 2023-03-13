@@ -1,0 +1,20 @@
+@import 'src/assets/scss/functions';
+
+.module{
+display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.options{
+  div{
+    width: 0.5rem;
+    height: 0.5rem;
+    background: getColor(foreground);
+    margin: 0.3rem;
+    border-radius: 50%;
+  }
+}
+.icon-button{
+  width: 5rem;
+  margin-right: -1rem;
+}

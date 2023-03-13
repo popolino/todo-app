@@ -1,38 +1,49 @@
 import React from "react";
 import classes from "./Task.module.scss";
-import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
-import SvgSelector from "../../../../components/svgSelector/SvgSelector";
-import { TColors } from "../../../../consts/colors";
+import { Checkbox } from "@mui/material";
+import SvgSelector from "src/components/svgSelector/SvgSelector";
+import clsx from "clsx";
+import { TTask } from "../Tasks";
 
-interface TTask {
-  color: TColors;
-  text: string;
+interface ITaskProps extends Partial<TTask> {
+  select: boolean;
+  onSelect: () => void;
+  onChange: () => void;
   onContextMenu: (event: React.MouseEvent) => void;
 }
 
-const Task: React.FC<TTask> = ({ color, text, onContextMenu }) => (
+const Task: React.FC<ITaskProps> = ({
+  isCompleted,
+  color,
+  text,
+  select,
+  onSelect,
+  onChange,
+  onContextMenu,
+}) => (
   <>
-    <div className="module" onContextMenu={onContextMenu}>
-      <div>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                icon={
-                  <SvgSelector
-                    id="checkbox"
-                    className={classes.checkbox}
-                    color={color}
-                  />
-                }
-                checkedIcon={<SvgSelector id="checked" color={color} />}
-              />
-            }
-            label=" "
-          />
-        </FormGroup>
+    <div
+      className={clsx(
+        "module",
+        { [classes.select]: select },
+        { [classes.completed]: isCompleted }
+      )}
+      onClick={onSelect}
+      onContextMenu={onContextMenu}
+    >
+      <div className="checkbox-task">
+        <Checkbox
+          onChange={onChange}
+          checked={isCompleted}
+          icon={<SvgSelector id="checkbox" color={color} />}
+          checkedIcon={<SvgSelector id="checked" color={color} />}
+        />
       </div>
-      <div className="text-module">{text}</div>
+      <div
+        className={clsx("text-module", { [classes["selected-text"]]: select })}
+      >
+        {text}
+      </div>
     </div>
   </>
 );

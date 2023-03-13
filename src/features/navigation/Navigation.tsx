@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import classes from "./Navigation.module.scss";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
 import clsx from "clsx";
@@ -8,18 +8,32 @@ import { IconButton } from "@mui/material";
 
 type TNavigationProps = {
   persistent: boolean;
+  open: boolean;
+  onClose: () => void;
 };
 
-const Navigation: React.FC<TNavigationProps> = ({ persistent }) => {
+const Navigation: React.FC<TNavigationProps> = ({
+  persistent,
+  open,
+  onClose,
+}) => {
   return (
-    <div className={persistent ? classes["layout-mobile"] : classes.layout}>
-      <IconButton classes={{ sizeLarge: classes.hide }} size="large">
-        <SvgSelector id="hide" />
-      </IconButton>
-      <div className={clsx("avatar", classes.avatar)}>
+    <div
+      className={clsx(classes.navigation, {
+        [classes.open]: open && !persistent,
+      })}
+    >
+      <div className={classes.top}>
         <div className={clsx("avatar", classes.avatar)}>
           <p>J</p>
         </div>
+        <IconButton
+          classes={{ sizeLarge: classes.hide }}
+          size="large"
+          onClick={onClose}
+        >
+          <SvgSelector id="hide" />
+        </IconButton>
       </div>
       <div className={classes.username}>
         <p>Joy</p>

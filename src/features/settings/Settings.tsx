@@ -84,7 +84,7 @@ const Settings = () => {
               <div className="checkbox">
                 <FormGroup>
                   <FormControlLabel
-                    control={<Checkbox defaultChecked />}
+                    control={<Checkbox />}
                     label="Show confirm messages"
                   />
                 </FormGroup>

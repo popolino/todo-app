@@ -5,4 +5,19 @@ svg {
 }
 
 .checkbox {
+  margin-left: -1rem;
+}
+.select{
+  background: getColor(blue);
+
+}
+.selected-text{
+  color: getColor(white);
+}
+.completed{
+ :global{
+   .text-module{
+     text-decoration: line-through;
+   }
+ }
 }

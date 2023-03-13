@@ -1,4 +1,11 @@
 @import "functions";
+
+.checkbox-task{
+  .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root{
+    margin-left: -1rem;
+  }
+}
+
 .input {
   .MuiInputBase-root {
     height: 4rem;
@@ -57,38 +64,47 @@
     margin-right: 1rem;
   }
 }
-.checkbox {
+.checkbox,
+.checkbox-small {
   .css-ahj2mt-MuiTypography-root {
-    font-size: 1.6rem;
     color: getColor(foreground) !important;
   }
   .css-i4bv87-MuiSvgIcon-root {
-
     width: 2.2rem;
     height: 2.2rem;
   }
+
   .css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root.Mui-checked {
     color: getColor(checkbox) !important;
   }
   .MuiSvgIcon-root {
-    fill: getColor(foreground)!important;
+    fill: getColor(foreground) !important;
     width: 2rem !important;
     height: 2rem !important;
   }
 }
-.menu-item {
+.checkbox{
+  .css-ahj2mt-MuiTypography-root {
+    font-size: 1.6rem;
+  }
+}
+.checkbox-small{
+  .css-j204z7-MuiFormControlLabel-root{
+    margin: 0;
+  }
+
+  .css-ahj2mt-MuiTypography-root {
+    font-size: 1.2rem;
+  }
+}
+.menu {
   svg {
     height: 2rem;
+    max-width: 2rem;
     margin-right: 1.5rem;
   }
   li:hover {
     background-color: getColor(hover);
-  }
-  li:first-child {
-    padding: 2rem 1.5rem 1.3rem;
-  }
-  li:last-child {
-    padding: 1.3rem 1.5rem 2rem;
   }
   .css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
     color: getColor(main-text);
@@ -97,12 +113,22 @@
   .css-6hp17o-MuiList-root-MuiMenu-list {
     padding: 0 0;
   }
-
   .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
     box-shadow: 0 0.3rem 1.5rem getColor(shadow) !important;
     border-radius: 1.5rem;
     width: 15.9rem;
     background: getColor(main-background);
+  }
+  li:first-child {
+    padding: 1.7rem 1.5rem 1.3rem;
+  }
+  li:last-child {
+    padding: 1.3rem 1.5rem 1.7rem;
+  }
+}
+.categories{
+  li:nth-child(2){
+    padding: 1.3rem 1.5rem;
   }
 }
 .modal {
@@ -115,32 +141,31 @@
   border-radius: 3rem;
   padding: 2rem;
   box-shadow: 24;
-  .modal-close{
+  .modal-close {
     display: flex;
     justify-content: end;
     button {
       padding: 0 !important;
     }
   }
-  .modal-buttons{
-display: flex;
+  .modal-buttons {
+    display: flex;
     width: 100%;
     justify-content: space-between;
   }
-  input{
+  input {
     font-size: 1.8rem;
     color: getColor(foreground);
     margin: 3.5rem 0;
     background: none;
-
   }
-  input::placeholder{
+  input::placeholder {
     color: getColor(foreground);
   }
-  svg{
+  svg {
     height: 3.5rem;
   }
-    rect:nth-child(2n+1) {
+  rect:nth-child(2n + 1) {
     fill: getColor(main-text);
   }
 }

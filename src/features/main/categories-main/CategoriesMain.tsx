@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
-import classes from "./Categories.module.scss";
+import classes from "./CategoriesMain.module.scss";
 
-import Category from "./category/Category";
+import CategoryMain from "./category-main/CategoryMain";
 import { TColors } from "../../../consts/colors";
 type TCategory = {
   id: string;
@@ -18,7 +18,7 @@ const categories: TCategory[] = [
   { id: "5", tasks: 40, completedTasks: 20, color: "blue", name: "business" },
 ];
 
-const Categories = () => {
+const CategoriesMain = () => {
   const scrollArea = useRef<HTMLDivElement>(null);
   //
   // useEffect(() => {
@@ -41,7 +41,7 @@ const Categories = () => {
       <div className={classes.gradient}>
         <div className={classes.categories} ref={scrollArea}>
           {categories.map((category) => (
-            <Category
+            <CategoryMain
               key={category.id}
               maximum={category.tasks}
               value={category.completedTasks}
@@ -54,4 +54,4 @@ const Categories = () => {
     </>
   );
 };
-export default Categories;
+export default CategoriesMain;

@@ -21,7 +21,7 @@ const friends: TRequests[] = [
   { id: "4", name: "Gordon Freeman" },
 ];
 
-function Friends() {
+const Friends = () => {
   return (
     <div className="main-container">
       <div className="container">
@@ -41,6 +41,6 @@ function Friends() {
       </div>
     </div>
   );
-}
+};
 
 export default Friends;

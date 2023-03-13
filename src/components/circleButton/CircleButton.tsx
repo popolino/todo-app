@@ -5,13 +5,24 @@ import clsx from "clsx";
 type TCircleButtonProps = {
   icon: any;
   className?: string;
-  onChange?: () => void;
+  color?: "blue" | "red";
+  onClick: () => void;
 };
 const CircleButton: React.FC<TCircleButtonProps> = ({
   className,
   icon,
-  onChange = () => {},
+  color = "blue",
+  onClick,
 }) => {
-  return <div className={clsx(classes.circle, className)}>{icon}</div>;
+  return (
+    <button
+      className={clsx(classes.circle, className, {
+        [classes.red]: color === "red",
+      })}
+      onClick={onClick}
+    >
+      {icon}
+    </button>
+  );
 };
 export default CircleButton;

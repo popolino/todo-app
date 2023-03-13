@@ -1,4 +1,4 @@
-import classes from "./Category.module.scss";
+import classes from "./CategoryMain.module.scss";
 import Progress, {
   TProgressProps,
 } from "../../../../components/progress/Progress";
@@ -8,7 +8,7 @@ interface ICategoryProps extends TProgressProps {
   name: string;
 }
 
-const Category: React.FC<ICategoryProps> = ({
+const CategoryMain: React.FC<ICategoryProps> = ({
   maximum,
   value,
   color,
@@ -21,4 +21,4 @@ const Category: React.FC<ICategoryProps> = ({
   </div>
 );
 
-export default Category;
+export default CategoryMain;

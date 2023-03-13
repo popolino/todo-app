@@ -1,0 +1,16 @@
+@import "src/assets/scss/functions";
+
+
+.modal-container {
+  height: 14rem;
+  padding: 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  p {
+    line-height: 2.2rem;
+    color: getColor(foreground);
+    font-size: 1.8rem;
+    text-align: center;
+  }
+}

@@ -56,10 +56,18 @@
 }
 body {
   background-color: getColor(background);
-  overflow-y: hidden;
+  overflow: hidden;
 }
 main{
   display: flex;
+  transition: 0.3s;
+
+  &.open{
+    transform: translateX(75vw);
+    .circle-container{
+      bottom: 0;
+    }
+  }
 }
 .vertical {
   background: getColor(white);
@@ -87,10 +95,12 @@ main{
   display: flex;
   justify-content: end;
 }
-.layout {
+
+.scroll {
   height: calc(100vh - 4rem);
   position: relative;
-
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .chapter {
   font-size: 3.6rem;
@@ -103,6 +113,10 @@ main{
   height: 4rem;
   border-radius: 3.1rem;
   font-weight: 300;
+  &:disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
 }
 .blue-button{
   box-shadow: 0 1rem 1.5rem getColor(shadow-blue);
@@ -115,6 +129,7 @@ main{
 }
 .module {
   display: flex;
+  gap: 1rem;
   background: getColor(main-background);
   align-items: center;
   padding: 2.1rem;
@@ -143,4 +158,17 @@ main{
   font-size: 1.2rem;
   font-weight: 700;
   color: getColor(main-text);
+}
+.delete-icon{
+  path{
+    fill: getColor(white);
+
+  }
+}
+.empty-message{
+  color: getColor(empty-message);
+  font-weight: 500;
+  font-size: 1.6rem;
+  margin-top: 3rem;
+  text-align: center;
 }

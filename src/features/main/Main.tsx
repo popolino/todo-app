@@ -1,11 +1,13 @@
 import React from "react";
 import Tasks from "./tasks/Tasks";
-import Categories from "./categories/Categories";
+import CategoriesMain from "./categories-main/CategoriesMain";
 
-const Main = () => (
-  <div className="layout main-container">
-    <Categories />
-    <Tasks />
-  </div>
-);
+const Main = () => {
+  return (
+    <>
+      <CategoriesMain />
+      <Tasks />
+    </>
+  );
+};
 export default Main;
