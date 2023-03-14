@@ -28,3 +28,39 @@ header {
   height: 5rem;
   margin: -1.3rem !important;
 }
+.animation {
+  pointer-events: none;
+  &:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    width: 1rem;
+    height: 1rem;
+    animation: theme 0.8s forwards;
+    background: #f0f4fb;
+    z-index: 1000;
+    border-radius: 50%;
+  }
+  &.dark {
+    &:after {
+      background: #171a1f;
+    }
+  }
+}
+@keyframes theme {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: scale(500);
+    opacity: 0;
+  }
+}

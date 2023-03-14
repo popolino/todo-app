@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import Header from "../features/main/header/Header";
 import Navigation from "../features/navigation/Navigation";
 import clsx from "clsx";
+import Reveal from "../features/reveal/Reveal";
 
 const PublicLayout = () => {
   const [isMobile, setMobile] = useState(window.innerWidth <= 500);
@@ -12,14 +13,17 @@ const PublicLayout = () => {
   });
   return (
     <main className={clsx({ ["open"]: isMobile && open })}>
+      {/*<Reveal />*/}
       <Navigation
         persistent={isMobile}
         open={open}
         onClose={() => setOpen(false)}
       />
-      <div className="scroll main-container">
+      <div className="wrapper">
         <Header onOpen={() => setOpen(true)} />
-        <Outlet />
+        <div className="scroll main-container">
+          <Outlet />
+        </div>
       </div>
     </main>
   );

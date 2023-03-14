@@ -1,11 +1,17 @@
 $light-theme: (
   violet: #d313e5,
   blue: #066aff,
+  red: #e15252,
+  orange: #f2874b,
+  yellow: #f9f02c,
+  green: #56e513,
+  aqua: #4fe1d8,
+  pink: #fdb1ec,
+
   main-background: #ffffff,
   background: #f0f4fb,
   main: #0e1f54,
   foreground: #7e8db7,
-  red: #e15252,
   default-icon: #7e8db7,
   shadow: rgba(126, 141, 183, 0.2),
   main-text: #0e1f54,
@@ -18,5 +24,6 @@ $light-theme: (
   navbar-icon: #526496,
   navbar-title: #ffffffcc,
   navbar-hover: rgba(0, 0, 0, 0.15),
-  empty-message: #BBC5E3,
+  empty-message: #bbc5e3,
+  opposite-background: #171a1f,
 );

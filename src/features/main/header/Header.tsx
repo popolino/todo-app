@@ -3,6 +3,7 @@ import classes from "./Header.module.scss";
 import SvgSelector from "../../../components/svgSelector/SvgSelector";
 import { IconButton } from "@mui/material";
 import { useThemeDetector } from "../../../hooks";
+import clsx from "clsx";
 
 type THeaderProps = {
   onOpen: () => void;
@@ -14,11 +15,32 @@ const Header: React.FC<THeaderProps> = ({ onOpen }) => {
   const [theme, setTheme] = useState(
     localStorageTheme === null ? systemTheme : localStorageTheme
   );
+  const [isDarkThemeButton, setIsDarkThemeButton] = useState(theme === "dark");
+  const [animation, setAnimation] = useState(false);
+
+  const handleToggleTheme = () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setIsDarkThemeButton(!isDarkThemeButton);
+    setAnimation(true);
+    const animationTimeout = setTimeout(() => {
+      setAnimation(false);
+      setTheme(newTheme);
+    }, 800);
+    const themeTimeout = setTimeout(() => {
+      document.documentElement.setAttribute("color-scheme", newTheme);
+      window.localStorage.setItem("theme", newTheme);
+    }, 400);
+    return () => {
+      clearTimeout(animationTimeout);
+      clearTimeout(themeTimeout);
+    };
+  };
+
   useEffect(() => {
+    setTheme(theme);
     document.documentElement.setAttribute("color-scheme", theme);
     window.localStorage.setItem("theme", theme);
-  }, [theme]);
-
+  }, []);
   return (
     <header>
       <IconButton
@@ -30,11 +52,16 @@ const Header: React.FC<THeaderProps> = ({ onOpen }) => {
       </IconButton>
       <div className={classes.right}>
         <IconButton
-          classes={{ sizeLarge: classes["icon-button"] }}
+          classes={{
+            sizeLarge: clsx(classes["icon-button"], {
+              [classes.animation]: animation,
+              [classes.dark]: isDarkThemeButton,
+            }),
+          }}
           size="large"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          onClick={handleToggleTheme}
         >
-          <SvgSelector id={theme === "dark" ? "light_mode" : "dark_mode"} />
+          <SvgSelector id={isDarkThemeButton ? "light_mode" : "dark_mode"} />
         </IconButton>
         <IconButton
           classes={{ sizeLarge: classes["icon-button"] }}

@@ -1,0 +1,148 @@
+@import "src/assets/scss/functions";
+
+@mixin center {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+.layer {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  button {
+    pointer-events: all;
+  }
+}
+
+.circle {
+  position: fixed;
+  @include center;
+  width: 100vw;
+  height: 100vw;
+  transform: scale(0);
+  border-radius: 50%;
+  z-index: 1000;
+  &.background {
+    background: getColor(opposite-background);
+    animation: background-grow 1.125s ease-out forwards, fade_out .75s forwards 4s;
+  }
+  &.first {
+    animation: reveal 1.5s forwards .15s, first_grow-out 1.125s cubic-bezier(.54,-0.01,.66,.39) forwards 1.68s;
+    border: 30vw solid getColor(background)
+  }
+  &.second {
+    animation: reveal 1.3s forwards .375s, second_grow_out 1.125s forwards ease-in 1.875s, fade_out .75s forwards 4s;
+    width: 20vw;
+    height: 20vw;
+    background: getColor(blue);
+  }
+  &.third {
+    animation: reveal 1.3s forwards .375s, third_shrink .75s forwards 1.875s;
+    width: 20vw;
+    height: 20vw;
+    background: getColor(background);
+  }
+}
+
+.title {
+  font-size: 10vw;
+  color: #f0f4fb;
+  font-weight: 900;
+  position: fixed;
+  @include center;
+  width: 100vw;
+  height: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  opacity: 0;
+  animation: title_reveal 1.25s forwards 2.6s, fade_out .75s forwards 3.9s;
+}
+
+
+@keyframes background-grow {
+  0% {
+    transform: scale(0);
+  }
+  90% {
+    transform: scale(3);
+    border-radius: 50%;
+  }
+  100% {
+    transform: scale(3);
+    border-radius: 0;
+  }
+}
+@keyframes reveal {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1.5);
+  }
+}
+@keyframes first_grow-out {
+  0% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(8);
+  }
+}
+@keyframes third_shrink {
+  0% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+@keyframes second_grow_out {
+  0% {
+    transform: scale(1.5);
+  }
+  100% {
+    transform: scale(15);
+  }
+}
+@keyframes second_shrink {
+  0% {
+    transform: scale(15);
+  }
+  100% {
+    transform: scale(1);
+    border-radius: 5vw;
+    width: 45vw;
+    height: 13vw;
+  }
+}
+
+@keyframes title_reveal {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fade_out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes second_fade_out {
+  0% {
+    opacity: .1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

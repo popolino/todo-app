@@ -3,13 +3,26 @@ import classes from "./Categories.module.scss";
 import Category from "./category/Category";
 import CircleButton from "../../components/circleButton/CircleButton";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
-import { Menu, MenuItem } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  FormControl,
+  FormControlLabel,
+  FormGroup,
+  InputLabel,
+  Menu,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from "@mui/material";
+import CustomModal from "../../components/custom-modal/CustomModal";
+import clsx from "clsx";
 
 type TCategoriesProps = {
   id: string;
   name: string;
 };
-
 const categories: TCategoriesProps[] = [
   { id: "1", name: "Business" },
   { id: "2", name: "Personal" },
@@ -22,41 +35,86 @@ const categories: TCategoriesProps[] = [
   { id: "9", name: "Work" },
   { id: "10", name: "Daily routine" },
 ];
-type TCoordinates = {
-  mouseX: number;
-  mouseY: number;
-} | null;
+
 const Categories = () => {
-  const [contextMenu, setContextMenu] = useState<TCoordinates>(null);
-  const handleContextMenu = (event: React.MouseEvent) => {
-    setContextMenu({ mouseX: event.clientX, mouseY: event.clientY });
-    event.preventDefault();
-    console.log(event);
+  const [age, setAge] = React.useState("");
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value as string);
   };
-  const handleClose = (event: React.MouseEvent) => {
-    setContextMenu(null);
+  const [categoriesCreationOpen, setCategoriesCreationOpen] = useState(false);
+  const [categoriesDeletionOpen, setCategoriesDeletionOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
   };
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClosed = () => setOpen(false);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <>
+      <CustomModal
+        open={true}
+        onClose={() => setCategoriesCreationOpen(false)}
+        onConfirm={() => false}
+      >
+        <div className={classes["modal-container"]}>
+          <p>Enter new category</p>
+          <div className="input color">
+            <FormControl fullWidth>
+              <InputLabel>Color</InputLabel>
+              <Select value={age} label="Color" onChange={handleChange}>
+                <MenuItem value={10}>
+                  <div className={clsx("colors", classes.blue)} />
+                  Blue
+                </MenuItem>
+                <MenuItem value={20}>
+                  <div className={clsx("colors", classes.violet)} />
+                  Violet
+                </MenuItem>
+                <MenuItem value={30}>
+                  {" "}
+                  <div className={clsx("colors", classes.red)} />
+                  Red
+                </MenuItem>
+                <MenuItem value={30}>
+                  <div className={clsx("colors", classes.orange)} />
+                  Orange
+                </MenuItem>
+                <MenuItem value={30}>
+                  <div className={clsx("colors", classes.yellow)} />
+                  Yellow
+                </MenuItem>
+                <MenuItem value={30}>
+                  <div className={clsx("colors", classes.green)} />
+                  Green
+                </MenuItem>
+                <MenuItem value={30}>
+                  <div className={clsx("colors", classes.aqua)} />
+                  Aqua
+                </MenuItem>
+                <MenuItem value={30}>
+                  <div className={clsx("colors", classes.pink)} />
+                  Pink
+                </MenuItem>
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+      </CustomModal>
       <Menu
         className="categories menu"
-        open={contextMenu !== null}
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
         onClose={handleClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          contextMenu !== null
-            ? { left: contextMenu.mouseX, top: contextMenu.mouseY }
-            : undefined
-        }
       >
-        <MenuItem>
-          <SvgSelector id="view" />
-          View
+        <MenuItem onClick={handleClose}>
+          <SvgSelector id="view" /> View
         </MenuItem>
         <MenuItem onClick={handleClose}>
+          {" "}
           <SvgSelector id="edit" />
           Edit
         </MenuItem>
@@ -73,13 +131,13 @@ const Categories = () => {
               <Category
                 key={category.id}
                 name={category.name}
-                onContextMenu={handleContextMenu}
+                onClick={handleClick}
               />
             ))}
           </div>
           <div className="container circle-container">
             <CircleButton
-              onClick={handleOpen}
+              onClick={() => setCategoriesCreationOpen(true)}
               className="circle-button"
               icon={
                 // <SvgSelector id="preloader" className="preloader" />

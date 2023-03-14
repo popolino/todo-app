@@ -97,10 +97,15 @@ main{
 }
 
 .scroll {
-  height: calc(100vh - 4rem);
+  height: calc(100vh - 12rem);
   position: relative;
   overflow-y: scroll;
   overflow-x: hidden;
+}
+.wrapper{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 .chapter {
   font-size: 3.6rem;
@@ -171,4 +176,9 @@ main{
   font-size: 1.6rem;
   margin-top: 3rem;
   text-align: center;
+}
+.colors{
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
 }

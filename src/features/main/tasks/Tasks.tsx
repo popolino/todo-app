@@ -31,28 +31,28 @@ const initialTasks: TTask[] = [
     color: "blue",
     isCompleted: true,
   },
-  { id: "2", text: "meditation", color: "blue", isCompleted: true },
+  { id: "2", text: "meditation", color: "blue", isCompleted: false },
   {
     id: "3",
-    text: "daily meeting with team",
+    text: "pay for rent",
     color: "blue",
-    isCompleted: true,
+    isCompleted: false,
   },
   {
     id: "4",
-    text: "daily meeting with team",
+    text: "check emails",
     color: "blue",
     isCompleted: false,
   },
   {
     id: "5",
-    text: "daily meeting with team",
+    text: "lunch with Daniel",
     color: "blue",
-    isCompleted: true,
+    isCompleted: false,
   },
   {
     id: "6",
-    text: "daily meeting with team",
+    text: "family dinner",
     color: "blue",
     isCompleted: false,
   },
@@ -60,7 +60,7 @@ const initialTasks: TTask[] = [
     id: "7",
     text: "daily meeting with team",
     color: "blue",
-    isCompleted: true,
+    isCompleted: false,
   },
 ];
 type TCoordinates = {
@@ -118,8 +118,8 @@ const Tasks: React.FC<TTasksProps> = () => {
       {
         id: uuid(),
         text: input,
-        color: "violet",
-        isCompleted: true,
+        color: "blue",
+        isCompleted: false,
       },
     ]);
     setInput("");

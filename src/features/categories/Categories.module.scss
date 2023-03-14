@@ -1,5 +1,35 @@
+@import "src/assets/scss/functions";
 
-
-.categories{
+.categories {
   margin-top: 3rem;
+}
+.modal-container {
+  p {
+    text-align: left;
+  }
+}
+.blue {
+  background: getColor(blue);
+}
+.violet {
+  background: getColor(violet);
+}
+
+.red {
+  background: getColor(red);
+}
+.orange {
+  background: getColor(orange);
+}
+.yellow {
+  background: getColor(yellow);
+}
+.green {
+  background: getColor(green);
+}
+.aqua {
+  background: getColor(aqua);
+}
+.pink {
+  background: getColor(pink);
 }
