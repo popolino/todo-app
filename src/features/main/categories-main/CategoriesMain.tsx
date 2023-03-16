@@ -1,8 +1,9 @@
-import React, { useRef } from "react";
+import React from "react";
 import classes from "./CategoriesMain.module.scss";
 
 import CategoryMain from "./category-main/CategoryMain";
 import { TColors } from "../../../consts/colors";
+import { useHorizontalScroll } from "src/hooks";
 type TCategory = {
   id: string;
   tasks: number;
@@ -19,19 +20,7 @@ const categories: TCategory[] = [
 ];
 
 const CategoriesMain = () => {
-  const scrollArea = useRef<HTMLDivElement>(null);
-  //
-  // useEffect(() => {
-  //   console.log(scrollArea);
-  //   document.addEventListener("wheel", (event) => {
-  //     console.log(event);
-  //     const current = scrollArea.current;
-  //     if (current) {
-  //       current.scrollLeft = current.scrollLeft + event.deltaY / 2;
-  //     }
-  //   });
-  // }, [scrollArea.current]);
-
+  const scrollArea = useHorizontalScroll();
   return (
     <>
       <div className="container">

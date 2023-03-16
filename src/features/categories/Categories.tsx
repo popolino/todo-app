@@ -4,100 +4,278 @@ import Category from "./category/Category";
 import CircleButton from "../../components/circleButton/CircleButton";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
 import {
-  Button,
-  Checkbox,
+  Collapse,
   FormControl,
-  FormControlLabel,
-  FormGroup,
   InputLabel,
+  ListItemText,
   Menu,
   MenuItem,
+  OutlinedInput,
   Select,
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import CustomModal from "../../components/custom-modal/CustomModal";
+import CustomModal from "src/components/custom-modal/CustomModal";
 import clsx from "clsx";
+import Avatar from "src/components/avatar/Avatar";
+import { colors, TColors } from "src/consts/colors";
+import { getColor } from "src/utils/Index";
+import { v4 as uuid } from "uuid";
+import { TransitionGroup } from "react-transition-group";
+import { CategoriesMock } from "./Categories.mock";
+import { friends } from "../friends/Friends.mock";
+import { TCategory } from "./Categories.types";
 
-type TCategoriesProps = {
-  id: string;
-  name: string;
+const userId = "1";
+const initialColor = colors[0].name;
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
 };
-const categories: TCategoriesProps[] = [
-  { id: "1", name: "Business" },
-  { id: "2", name: "Personal" },
-  { id: "3", name: "Groceries" },
-  { id: "4", name: "Work" },
-  { id: "5", name: "Daily routine" },
-  { id: "6", name: "Business" },
-  { id: "7", name: "Personal" },
-  { id: "8", name: "Groceries" },
-  { id: "9", name: "Work" },
-  { id: "10", name: "Daily routine" },
-];
 
 const Categories = () => {
-  const [age, setAge] = React.useState("");
+  const [currentActive, setCurrentActive] = useState<TCategory | undefined>();
+  const [members, setMembers] = useState<string[]>([]);
+  const [color, setColor] = useState<TColors>(initialColor);
+  const [categories, setCategories] = useState(CategoriesMock);
+  const [categoriesCreationOpen, setCategoriesCreationOpen] = useState(false);
+  const [categoriesEditOpen, setCategoriesEditOpen] = useState(false);
+  const [input, setInput] = useState("");
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleChangeMembers = (event: SelectChangeEvent<typeof members>) => {
+    const {
+      target: { value },
+    } = event;
+    console.log(value);
+    setMembers(typeof value === "string" ? value.split(",") : value);
+  };
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+    setColor(event.target.value as TColors);
   };
-  const [categoriesCreationOpen, setCategoriesCreationOpen] = useState(false);
-  const [categoriesDeletionOpen, setCategoriesDeletionOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    category: TCategory
+  ) => {
     setAnchorEl(event.currentTarget);
+    setCurrentActive(category);
   };
+  const handleDelete = () => {
+    if (!currentActive) return;
+    setCategories([
+      ...categories.filter((category) => category.id !== currentActive.id),
+    ]);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleCreateCategory = () => {
+    setCategories([
+      ...categories,
+      {
+        id: uuid(),
+        creatorId: userId,
+        name: input,
+        color: color,
+        members:
+          members.map((memberId) => findUser(memberId) || friends[0]) || null,
+      },
+    ]);
+
+    setCategoriesCreationOpen(false);
+  };
+  const handleEditModalOpen = () => {
+    if (!currentActive) return;
+    setCategoriesEditOpen(true);
+    setInput(currentActive.name);
+    setColor(currentActive.color);
+    const memberIds: string[] = currentActive.members
+      ? currentActive.members?.map((member) => member.id)
+      : [];
+    setMembers(memberIds);
+  };
+  const handleCreationModalOpen = () => {
+    setCategoriesCreationOpen(true);
+    setInput("");
+    setColor(initialColor);
+    setMembers([]);
+  };
+  const handleEditCategory = () => {
+    if (!currentActive) return;
+    setCategories([
+      ...categories.map((category) =>
+        category.id === currentActive.id
+          ? {
+              ...category,
+              name: input,
+              members:
+                members.map((memberId) => findUser(memberId) || friends[0]) ||
+                null,
+              color: color,
+            }
+          : category
+      ),
+    ]);
+    setCategoriesEditOpen(false);
+  };
+  const findUser = (id: string) => friends.find((friend) => friend.id === id);
+  const renderMembers = (selected: string[]) => {
+    console.log("members", members);
+    return selected
+      .map((userId) => `${findUser(userId)?.name} ${findUser(userId)?.surname}`)
+      .join(", ");
+  };
+
+  const getCategories = ({ own }: { own: boolean }) =>
+    categories.filter((category) =>
+      own ? category.creatorId === userId : category.creatorId !== userId
+    );
   return (
     <>
       <CustomModal
-        open={true}
+        open={categoriesCreationOpen}
         onClose={() => setCategoriesCreationOpen(false)}
-        onConfirm={() => false}
+        disabled={!input}
+        onConfirm={handleCreateCategory}
       >
         <div className={classes["modal-container"]}>
-          <p>Enter new category</p>
+          <h1>Enter new category</h1>
           <div className="input color">
-            <FormControl fullWidth>
+            <FormControl fullWidth required={true}>
               <InputLabel>Color</InputLabel>
-              <Select value={age} label="Color" onChange={handleChange}>
-                <MenuItem value={10}>
-                  <div className={clsx("colors", classes.blue)} />
-                  Blue
-                </MenuItem>
-                <MenuItem value={20}>
-                  <div className={clsx("colors", classes.violet)} />
-                  Violet
-                </MenuItem>
-                <MenuItem value={30}>
-                  {" "}
-                  <div className={clsx("colors", classes.red)} />
-                  Red
-                </MenuItem>
-                <MenuItem value={30}>
-                  <div className={clsx("colors", classes.orange)} />
-                  Orange
-                </MenuItem>
-                <MenuItem value={30}>
-                  <div className={clsx("colors", classes.yellow)} />
-                  Yellow
-                </MenuItem>
-                <MenuItem value={30}>
-                  <div className={clsx("colors", classes.green)} />
-                  Green
-                </MenuItem>
-                <MenuItem value={30}>
-                  <div className={clsx("colors", classes.aqua)} />
-                  Aqua
-                </MenuItem>
-                <MenuItem value={30}>
-                  <div className={clsx("colors", classes.pink)} />
-                  Pink
-                </MenuItem>
+              <Select
+                value={color}
+                label="Color"
+                onChange={handleChange}
+                renderValue={() => (
+                  <div
+                    color={getColor(color || "red")}
+                    style={{ background: getColor(color || "red") }}
+                    className={clsx("colors", classes.selected)}
+                  />
+                )}
+              >
+                {colors.map((color) => (
+                  <MenuItem key={color.name} value={color.name}>
+                    <div
+                      style={{ background: getColor(color.name) }}
+                      className={clsx("colors")}
+                    />
+                    {color.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className={clsx(classes.input, "input")}>
+            <TextField
+              required={true}
+              autoComplete="off"
+              id="outlined-textarea"
+              label="Name"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+          </div>
+          <div className="input checkmarks">
+            <FormControl>
+              <InputLabel id="demo-multiple-checkbox-label">Members</InputLabel>
+              <Select
+                multiple
+                value={members}
+                onChange={handleChangeMembers}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={renderMembers}
+                MenuProps={MenuProps}
+              >
+                {friends.map((friend) => (
+                  <MenuItem key={friend.id} value={friend.id}>
+                    <Avatar picture={friend.picture} name={friend.name} />
+                    <ListItemText
+                      primary={`${friend.name} ${friend.surname}`}
+                    />
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+        </div>
+      </CustomModal>
+      <CustomModal
+        open={categoriesEditOpen}
+        onClose={() => setCategoriesEditOpen(false)}
+        disabled={!input}
+        onConfirm={handleEditCategory}
+      >
+        <div className={classes["modal-container"]}>
+          <h1>Edit category</h1>
+          <div className="input color">
+            <FormControl fullWidth required={true}>
+              <InputLabel>Color</InputLabel>
+              <Select
+                value={color}
+                label="Color"
+                onChange={handleChange}
+                renderValue={() => (
+                  <div
+                    color={getColor(color || "red")}
+                    style={{ background: getColor(color || "red") }}
+                    className={clsx("colors", classes.selected)}
+                  />
+                )}
+              >
+                {colors.map((color) => (
+                  <MenuItem key={color.name} value={color.name}>
+                    <div
+                      style={{ background: getColor(color.name) }}
+                      className={clsx("colors")}
+                    />
+                    {color.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </div>
+          <div className={clsx(classes.input, "input")}>
+            <TextField
+              required={true}
+              autoComplete="off"
+              id="outlined-textarea"
+              label="Name"
+              value={input}
+              onChange={(event) => setInput(event.target.value)}
+            />
+          </div>
+          <div className="input checkmarks">
+            <FormControl>
+              <InputLabel id="demo-multiple-checkbox-label">Members</InputLabel>
+              <Select
+                multiple
+                value={members}
+                onChange={handleChangeMembers}
+                input={<OutlinedInput label="Tag" />}
+                renderValue={renderMembers}
+                MenuProps={MenuProps}
+              >
+                {friends.map((friend) => (
+                  <MenuItem key={friend.id} value={friend.id}>
+                    <Avatar picture={friend.picture} name={friend.name} />
+                    <ListItemText
+                      primary={`${friend.name} ${friend.surname}`}
+                    />
+                  </MenuItem>
+                ))}
               </Select>
             </FormControl>
           </div>
@@ -113,31 +291,86 @@ const Categories = () => {
         <MenuItem onClick={handleClose}>
           <SvgSelector id="view" /> View
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          {" "}
-          <SvgSelector id="edit" />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <SvgSelector id="delete" />
-          Delete
-        </MenuItem>
+        {currentActive?.creatorId === userId && (
+          <MenuItem
+            onClick={() => {
+              handleEditModalOpen();
+              handleClose();
+            }}
+          >
+            {" "}
+            <SvgSelector id="edit" />
+            Edit
+          </MenuItem>
+        )}
+        {currentActive?.creatorId === userId ? (
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleDelete();
+            }}
+          >
+            <SvgSelector id="delete" />
+            Delete
+          </MenuItem>
+        ) : (
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              handleDelete();
+            }}
+          >
+            <SvgSelector id="logout" />
+            Leave
+          </MenuItem>
+        )}
       </Menu>
       <div className="main-container">
         <div className="container">
           <div className="chapter">Categories</div>
+          <div className="title">OWN</div>
           <div className={classes.categories}>
-            {categories.map((category) => (
-              <Category
-                key={category.id}
-                name={category.name}
-                onClick={handleClick}
-              />
-            ))}
+            <TransitionGroup component={"ul"}>
+              {getCategories({ own: true }).length > 0 ? (
+                getCategories({ own: true }).map((category) => (
+                  <Collapse key={category.id}>
+                    <Category
+                      name={category.name}
+                      color={category.color}
+                      onClick={(event) => handleClick(event, category)}
+                    />
+                  </Collapse>
+                ))
+              ) : (
+                <Collapse>
+                  <li className="empty-message">There is no categories yet</li>
+                </Collapse>
+              )}
+            </TransitionGroup>
           </div>
+          {getCategories({ own: false }).length > 0 && (
+            <>
+              <div className="title">PARTICIPATION</div>
+              <div className={classes.categories}>
+                <TransitionGroup>
+                  {categories
+                    .filter((category) => category.creatorId !== userId)
+                    .map((category) => (
+                      <Collapse key={category.id}>
+                        <Category
+                          name={category.name}
+                          color={category.color}
+                          onClick={(event) => handleClick(event, category)}
+                        />
+                      </Collapse>
+                    ))}
+                </TransitionGroup>
+              </div>
+            </>
+          )}
           <div className="container circle-container">
             <CircleButton
-              onClick={() => setCategoriesCreationOpen(true)}
+              onClick={handleCreationModalOpen}
               className="circle-button"
               icon={
                 // <SvgSelector id="preloader" className="preloader" />

@@ -1,6 +1,7 @@
 import React from "react";
-import { colors, TColors } from "src/consts/colors";
+import { TColors } from "src/consts/colors";
 import "src/assets/scss/global.scss";
+import { getColor } from "src/utils/Index";
 
 type TSvgSelectorProps = {
   id: string;
@@ -17,7 +18,7 @@ const SvgSelector: React.FC<TSvgSelectorProps> = ({
   style,
   color,
 }) => {
-  const colorCode = color ? colors[color] : "";
+  const colorCode = color ? getColor(color) : "";
   const svgMap: TSvgMapItem = {
     search: (
       <svg className={className} style={style} viewBox="0 0 24 24">

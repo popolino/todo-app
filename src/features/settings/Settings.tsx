@@ -5,7 +5,6 @@ import {
   FormGroup,
   InputLabel,
   MenuItem,
-  MenuList,
   OutlinedInput,
   Select,
   SelectChangeEvent,
@@ -69,7 +68,7 @@ const Settings = () => {
                   <MenuItem value={10}>English</MenuItem>
                   <MenuItem value={20}>Русский</MenuItem>
                   <MenuItem value={30}>Español</MenuItem>
-                  <MenuItem value={30}>العربية</MenuItem>
+                  <MenuItem value={40}>العربية</MenuItem>
                 </Select>
               </FormControl>
             </div>

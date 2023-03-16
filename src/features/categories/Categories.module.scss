@@ -1,8 +1,5 @@
 @import "src/assets/scss/functions";
 
-.categories {
-  margin-top: 3rem;
-}
 .modal-container {
   p {
     text-align: left;
@@ -32,4 +29,12 @@
 }
 .pink {
   background: getColor(pink);
+}
+.selected{
+  width: 4rem;
+  border-radius: 1.5rem;
+  transform: translate(-1rem, -0.35rem);
+}
+.input{
+  margin-bottom: 2rem;
 }

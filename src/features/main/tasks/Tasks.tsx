@@ -27,43 +27,43 @@ export type TTask = {
 const initialTasks: TTask[] = [
   {
     id: "1",
-    text: "daily meeting with team",
+    text: "Daily meeting with team",
     color: "blue",
     isCompleted: true,
   },
-  { id: "2", text: "meditation", color: "blue", isCompleted: false },
+  { id: "2", text: "Meditation", color: "blue", isCompleted: false },
   {
     id: "3",
-    text: "pay for rent",
+    text: "Pay for rent",
     color: "blue",
     isCompleted: false,
   },
   {
     id: "4",
-    text: "check emails",
+    text: "Check emails",
     color: "blue",
     isCompleted: false,
   },
   {
     id: "5",
-    text: "lunch with Daniel",
+    text: "Lunch with Daniel",
     color: "blue",
     isCompleted: false,
   },
   {
     id: "6",
-    text: "family dinner",
+    text: "Family dinner",
     color: "blue",
     isCompleted: false,
   },
   {
     id: "7",
-    text: "daily meeting with team",
+    text: "Daily meeting with team",
     color: "blue",
     isCompleted: false,
   },
 ];
-type TCoordinates = {
+export type TCoordinates = {
   mouseX: number;
   mouseY: number;
 } | null;
@@ -75,6 +75,7 @@ const Tasks: React.FC<TTasksProps> = () => {
   const [currentActive, setCurrentActive] = useState<string | undefined>();
   const [taskCreationOpen, setTaskCreationOpen] = useState(false);
   const [taskDeletionOpen, setTaskDeletionOpen] = useState(false);
+  const [taskEditOpen, setTaskEditOpen] = useState(false);
   const [input, setInput] = useState("");
 
   const fetching = false;
@@ -98,7 +99,7 @@ const Tasks: React.FC<TTasksProps> = () => {
     setSelected([]);
     setTasks([...tasks.filter((task) => !selected.includes(task.id))]);
   };
-  const handleClose = () => {
+  const handleContextClose = () => {
     setContextMenu(null);
   };
   const handleCompleted = (task: TTask) =>
@@ -125,6 +126,18 @@ const Tasks: React.FC<TTasksProps> = () => {
     setInput("");
     setTaskCreationOpen(false);
   };
+  const handleEditTask = () => {
+    if (!currentActive) return;
+    setTasks([
+      ...tasks.map((currentTask) =>
+        currentTask.id === currentActive
+          ? { ...currentTask, text: input }
+          : currentTask
+      ),
+    ]);
+    setInput("");
+    setTaskEditOpen(false);
+  };
   return (
     <>
       <CustomModal
@@ -148,6 +161,22 @@ const Tasks: React.FC<TTasksProps> = () => {
         </>
       </CustomModal>
       <CustomModal
+        open={taskEditOpen}
+        disabled={!input}
+        onClose={() => {
+          setTaskEditOpen(false);
+          setInput("");
+        }}
+        onConfirm={handleEditTask}
+      >
+        <input
+          type="text"
+          placeholder="Edit this task"
+          value={input}
+          onChange={(event) => setInput(event.target.value)}
+        />
+      </CustomModal>
+      <CustomModal
         open={taskCreationOpen}
         disabled={!input}
         onClose={() => {
@@ -166,7 +195,7 @@ const Tasks: React.FC<TTasksProps> = () => {
       <Menu
         className="menu"
         open={contextMenu !== null}
-        onClose={handleClose}
+        onClose={handleContextClose}
         anchorReference="anchorPosition"
         anchorPosition={
           contextMenu !== null
@@ -177,7 +206,7 @@ const Tasks: React.FC<TTasksProps> = () => {
         <MenuItem
           onClick={() => {
             handleSelect(currentActive);
-            handleClose();
+            handleContextClose();
           }}
         >
           <SvgSelector id="select" />
@@ -185,8 +214,21 @@ const Tasks: React.FC<TTasksProps> = () => {
         </MenuItem>
         <MenuItem
           onClick={() => {
+            setTaskEditOpen(true);
+
+            const task = tasks.find((task) => task.id === currentActive);
+            if (!task) return;
+            setInput(task.text);
+            handleContextClose();
+          }}
+        >
+          <SvgSelector id="edit" />
+          Edit
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
             handleDelete(currentActive);
-            handleClose();
+            handleContextClose();
           }}
         >
           <SvgSelector id="delete" />

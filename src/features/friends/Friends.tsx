@@ -1,25 +1,11 @@
 import React from "react";
 import "src/assets/scss/global.scss";
 import classes from "./Friends.module.scss";
-import Request from "./request/Request";
 import Friend from "./friend/Friend";
 import clsx from "clsx";
-
-type TRequests = {
-  id: string;
-  name: string;
-};
-const requests: TRequests[] = [
-  { id: "1", name: "Peter Parker" },
-  { id: "2", name: "Tony Soprano" },
-  { id: "3", name: "Stan Lee" },
-];
-const friends: TRequests[] = [
-  { id: "1", name: "Joy Mitchell" },
-  { id: "2", name: "Richard Sapogov" },
-  { id: "3", name: "Vlad is Love" },
-  { id: "4", name: "Gordon Freeman" },
-];
+import Pending from "./request/Pending";
+import Outgoing from "./outgoing/Outgoing";
+import { friends, pending, outgoing } from "./Friends.mock";
 
 const Friends = () => {
   return (
@@ -30,13 +16,23 @@ const Friends = () => {
           <input type="text" placeholder="Enter user email" />
           <button className="blue-button">Send request</button>
         </div>
-        <div className="title">REQUESTS</div>
-        {requests.map((request) => (
-          <Request key={request.id} name={request.name} />
+        <div className="title">PENDING</div>
+        {pending.map((pending) => (
+          <Pending
+            key={pending.id}
+            name={`${pending.name} ${pending.surname}`}
+          />
+        ))}{" "}
+        <div className="title">OUTGOING</div>
+        {outgoing.map((outgoing) => (
+          <Outgoing
+            key={outgoing.id}
+            name={`${outgoing.name} ${outgoing.surname}`}
+          />
         ))}
         <div className="title">FRIENDS</div>
         {friends.map((friend) => (
-          <Friend key={friend.id} name={friend.name} />
+          <Friend key={friend.id} name={`${friend.name} ${friend.surname}`} />
         ))}
       </div>
     </div>

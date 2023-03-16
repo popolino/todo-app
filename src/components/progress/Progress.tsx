@@ -1,6 +1,7 @@
 import React from "react";
 import classes from "./Progress.module.scss";
-import { colors, TColors } from "../../consts/colors";
+import { TColors } from "src/consts/colors";
+import { getColor } from "src/utils/Index";
 
 export type TProgressProps = {
   maximum: number;
@@ -13,7 +14,11 @@ const Progress: React.FC<TProgressProps> = ({ maximum, value, color }) => {
     <div className={classes["progress-bar"]}>
       <div
         className={classes.value}
-        style={{ width: `${percent}%`, background: colors[color] }}
+        // let cityId = cities.find(city => city.name === searchTerm).id
+        style={{
+          width: `${percent}%`,
+          background: getColor(color),
+        }}
       >
         {percent > 0 && <div />}
       </div>
@@ -21,7 +26,7 @@ const Progress: React.FC<TProgressProps> = ({ maximum, value, color }) => {
         className={classes.shadow}
         style={{
           width: `${percent}%`,
-          boxShadow: `0px 1px 3px 0 ${colors[color]}`,
+          boxShadow: `0px 1px 3px 0 ${getColor(color)}`,
         }}
       />
     </div>

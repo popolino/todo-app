@@ -20,10 +20,10 @@
     width: 100%;
   }
   .css-dpjnhs-MuiInputBase-root-MuiOutlinedInput-root {
-    font-size: 1.6rem !important;
+    font-size: 1.4rem !important;
   }
   .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
-    font-size: 1.6rem !important;
+    font-size: 1.4rem !important;
     padding-bottom: 2rem !important;
   }
   .css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root {
@@ -38,7 +38,7 @@
     color: getColor(foreground) !important;
   }
   .css-9ddj71-MuiInputBase-root-MuiOutlinedInput-root {
-    font-size: 1.6rem !important;
+    font-size: 1.4rem !important;
   }
   .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input {
     transform: translate(1rem);
@@ -62,41 +62,68 @@
   }
 }
 .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
-  background-color: getColor(main-background)!important;
+  background-color: getColor(main-background) !important;
   border-radius: 2rem !important;
 }
 .css-6hp17o-MuiList-root-MuiMenu-list {
   padding: 0 0 !important;
 }
-.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root{
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root {
   color: getColor(main-text) !important;
-  font-size: 1.6rem !important;
-  font-weight: 400!important;
+  font-size: 1.4rem !important;
+  font-weight: 400 !important;
 }
-.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root:hover{
-  background: getColor(hover)!important;
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root:hover {
+  background: getColor(hover) !important;
 }
-.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected{
-  background: getColor(hover)!important;
+.css-kk1bwy-MuiButtonBase-root-MuiMenuItem-root.Mui-selected {
+  background: getColor(hover) !important;
 }
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   color: getColor(main-text) !important;
-  transform: translate(0.6rem, 0.4rem)!important;
-  font-size: 1.6rem !important;
-  font-weight: 400!important;
+  transform: translate(0.6rem, 0.4rem) !important;
+  font-size: 1.4rem !important;
+  font-weight: 400 !important;
 }
-.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-11u53oe-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input {
   color: getColor(main-text) !important;
   //transform: translate(0.6rem, 0.4rem)!important;
-  font-size: 1.6rem !important;
-  font-weight: 400!important;
+  font-size: 1.4rem !important;
+  font-weight: 400 !important;
 }
-.css-6hp17o-MuiList-root-MuiMenu-list{
-  padding: 0!important;
+.css-6hp17o-MuiList-root-MuiMenu-list {
+  padding: 0 !important;
 }
 .color {
+  padding: 2rem 0;
+  .css-q8hpuo-MuiFormControl-root {
+    width: 8.5rem;
+  }
+  .css-hfutr2-MuiSvgIcon-root-MuiSelect-icon,
+  .css-bpeome-MuiSvgIcon-root-MuiSelect-icon {
+    color: getColor(foreground) !important;
+    width: 2rem;
+    height: 2rem;
+    margin-top: -0.2rem;
+    margin-right: -0.2rem;
+    path {
+      fill: getColor(foreground);
+    }
+  }
+}
+.checkmarks {
+  .css-2m9kme-MuiFormControl-root {
+    margin: 0 !important;
+    width: 100%;
+  }
+  .css-14lo706{
+    width: 5.5rem;
+  }
 
 
+}
+.css-10hburv-MuiTypography-root{
+  font-size: 1.4rem!important;
 }
 .checkbox,
 .checkbox-small {
@@ -119,12 +146,13 @@
 }
 .checkbox {
   .css-ahj2mt-MuiTypography-root {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 }
 .checkbox-small {
   .css-j204z7-MuiFormControlLabel-root {
     margin: 0;
+    padding: 0 2rem;
   }
 
   .css-ahj2mt-MuiTypography-root {
@@ -133,6 +161,7 @@
 }
 .menu {
   svg {
+    width: 2rem;
     height: 2rem;
     max-width: 2rem;
     margin-right: 1.5rem;
@@ -165,8 +194,10 @@
     padding: 1.3rem 1.5rem;
   }
 }
-.modal {
+.modal,
+.categories-modal {
   position: absolute;
+  height: auto;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -189,9 +220,10 @@
   }
   input {
     font-size: 1.8rem;
-    color: getColor(foreground);
+    color: getColor(main-text);
     margin: 3.5rem 0;
     background: none;
+    transform: translateX(0.5rem)!important;
   }
   input::placeholder {
     color: getColor(foreground);

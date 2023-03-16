@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useThemeDetector = () => {
   const getCurrentTheme = () =>
@@ -14,4 +14,28 @@ export const useThemeDetector = () => {
     return () => darkThemeMq.removeListener(mqListener);
   }, []);
   return isDarkTheme;
+};
+export const useHorizontalScroll = () => {
+  const scrollArea = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleHorizontalScroll = (event: any) => {
+      if (!scrollArea.current) return;
+      const target = event.target as HTMLElement;
+      if (
+        scrollArea.current !== event.target &&
+        !scrollArea.current.contains(target)
+      )
+        return;
+      event.preventDefault();
+      const current = scrollArea.current;
+      if (current) {
+        current.scrollLeft = current.scrollLeft + event.deltaY / 2;
+      }
+    };
+    window.addEventListener("wheel", handleHorizontalScroll, {
+      passive: false,
+    });
+    return () => window.removeEventListener("wheel", handleHorizontalScroll);
+  }, [scrollArea.current]);
+  return scrollArea;
 };

@@ -49,10 +49,12 @@
   align-items: center;
 }
 .title {
+  height: 4.5rem;
   color: getColor(foreground);
   font-weight: 700;
   font-size: 1.3rem;
-  padding: 2.4rem 0 1.4rem 0;
+  align-items: center;
+  display: flex;
 }
 body {
   background-color: getColor(background);
@@ -94,6 +96,10 @@ main{
   right: 0;
   display: flex;
   justify-content: end;
+  pointer-events: none;
+  button{
+    pointer-events: all;
+  }
 }
 
 .scroll {
@@ -108,6 +114,9 @@ main{
   width: 100%;
 }
 .chapter {
+  display: flex;
+  align-items: center;
+  height: 6.3rem;
   font-size: 3.6rem;
   font-weight: 600;
   color: getColor(main-text);
@@ -144,7 +153,6 @@ main{
   margin-bottom: 0.6rem;
 }
 .text-module {
-  text-transform: capitalize;
   font-size: 1.4rem;
   font-weight: 500;
 }
@@ -174,11 +182,20 @@ main{
   color: getColor(empty-message);
   font-weight: 500;
   font-size: 1.6rem;
-  margin-top: 3rem;
+  margin: 3rem 0;
   text-align: center;
 }
 .colors{
+  margin-right: 1.5rem;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
+}
+.module-part{
+  display: flex;
+  align-items: center;
+}
+.outgoing, .friend, .pending{
+  display: flex;
+  justify-content: space-between;
 }
