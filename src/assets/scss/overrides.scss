@@ -126,7 +126,8 @@
   font-size: 1.4rem!important;
 }
 .checkbox,
-.checkbox-small {
+.checkbox-small,
+.checkbox-remember{
   .css-ahj2mt-MuiTypography-root {
     color: getColor(foreground) !important;
   }
@@ -157,6 +158,12 @@
 
   .css-ahj2mt-MuiTypography-root {
     font-size: 1.2rem;
+  }
+}
+.checkbox-remember{
+  .css-ahj2mt-MuiTypography-root{
+    font-size: 1.1rem;
+    color: getColor(empty-message)!important;
   }
 }
 .menu {

@@ -32,19 +32,15 @@ const Settings = () => {
           </div>
           <div className={classes.forms}>
             <div className={clsx(classes.form, "input")}>
-              <TextField id="outlined-textarea" label="Name" />
+              <TextField label="Name" />
             </div>
             <div className={clsx(classes.form, "input")}>
-              <TextField id="outlined-textarea" label="Surname" />
+              <TextField label="Surname" />
             </div>
             <div className={clsx(classes.form, "input")}>
               <FormControl>
                 <InputLabel>Password</InputLabel>
-                <OutlinedInput
-                  id="outlined-adornment-password"
-                  type="password"
-                  label="Password"
-                />
+                <OutlinedInput type="password" label="Password" />
               </FormControl>
             </div>
           </div>
@@ -57,14 +53,8 @@ const Settings = () => {
           <div className={classes.forms}>
             <div className={clsx(classes.form, "input")}>
               <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Language</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={age}
-                  label="Language"
-                  onChange={handleChange}
-                >
+                <InputLabel>Language</InputLabel>
+                <Select value={age} label="Language" onChange={handleChange}>
                   <MenuItem value={10}>English</MenuItem>
                   <MenuItem value={20}>Русский</MenuItem>
                   <MenuItem value={30}>Español</MenuItem>

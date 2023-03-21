@@ -7,10 +7,12 @@ import Friends from "./features/friends/Friends";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import PublicLayout from "./layouts/PublicLayout";
 import Categories from "./features/categories/Categories";
+import Login from "./features/authorization/Login";
 
 const Router = () => (
   <BrowserRouter>
     <Routes>
+      <Route path="login" element={<Login />} />
       <Route element={<PublicLayout />}>
         <Route path="tasks" element={<Main />} />
         <Route path="/" element={<Main />} />

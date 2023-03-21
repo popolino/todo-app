@@ -56,7 +56,7 @@ const Navigation: React.FC<TNavigationProps> = ({
           <NavLinkComponent path="/settings" id="settings" title="Settings" />
         </div>
         <div className={classes.footer}>
-          <NavLinkComponent path="logout" id="logout" title="Logout" />
+          <NavLinkComponent path="/login" id="logout" title="Logout" />
           <img src={logo} alt="" />
           <div className={classes.text}>
             <h1>Todo</h1>
