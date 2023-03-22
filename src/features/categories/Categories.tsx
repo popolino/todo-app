@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./Categories.module.scss";
 import Category from "./category/Category";
 import CircleButton from "../../components/circleButton/CircleButton";
@@ -20,14 +20,22 @@ import clsx from "clsx";
 import Avatar from "src/components/avatar/Avatar";
 import { colors, TColors } from "src/consts/colors";
 import { getColor } from "src/utils/Index";
-import { v4 as uuid } from "uuid";
 import { TransitionGroup } from "react-transition-group";
-import { CategoriesMock } from "./Categories.mock";
 import { friends } from "../friends/Friends.mock";
 import { TCategory } from "./Categories.types";
-
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import {
+  changeColor,
+  changeMembers,
+  closeCreationModal,
+  createCategory,
+  deleteCategory,
+  fetchCategories,
+  openCreationModal,
+  setInput,
+} from "./Categories.slice";
+import { findUser } from "./categories.utils";
 const userId = "1";
-const initialColor = colors[0].name;
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -41,26 +49,26 @@ const MenuProps = {
 };
 
 const Categories = () => {
+  const { categories, input, color, members, creationModalOpen } =
+    useAppSelector((state) => state.categoriesReducer);
+  const dispatch = useAppDispatch();
+
   const [currentActive, setCurrentActive] = useState<TCategory | undefined>();
-  const [members, setMembers] = useState<string[]>([]);
-  const [color, setColor] = useState<TColors>(initialColor);
-  const [categories, setCategories] = useState(CategoriesMock);
-  const [categoriesCreationOpen, setCategoriesCreationOpen] = useState(false);
   const [categoriesEditOpen, setCategoriesEditOpen] = useState(false);
-  const [input, setInput] = useState("");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const open = !!anchorEl;
 
   const handleChangeMembers = (event: SelectChangeEvent<typeof members>) => {
     const {
       target: { value },
     } = event;
-    console.log(value);
-    setMembers(typeof value === "string" ? value.split(",") : value);
+    dispatch(
+      changeMembers(typeof value === "string" ? value.split(",") : value)
+    );
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setColor(event.target.value as TColors);
+  const handleChangeColor = (event: SelectChangeEvent) => {
+    dispatch(changeColor(event.target.value as TColors));
   };
 
   const handleClick = (
@@ -72,64 +80,57 @@ const Categories = () => {
   };
   const handleDelete = () => {
     if (!currentActive) return;
-    setCategories([
-      ...categories.filter((category) => category.id !== currentActive.id),
-    ]);
+    dispatch(deleteCategory(currentActive.id));
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(setInput(event.target.value));
+  };
   const handleCreateCategory = () => {
-    setCategories([
-      ...categories,
-      {
-        id: uuid(),
-        creatorId: userId,
-        name: input,
-        color: color,
-        members:
-          members.map((memberId) => findUser(memberId) || friends[0]) || null,
-      },
-    ]);
-
-    setCategoriesCreationOpen(false);
+    dispatch(createCategory());
   };
   const handleEditModalOpen = () => {
     if (!currentActive) return;
     setCategoriesEditOpen(true);
-    setInput(currentActive.name);
-    setColor(currentActive.color);
+    // setInput(currentActive.name);
+
+    // setColor(currentActive.color);
     const memberIds: string[] = currentActive.members
       ? currentActive.members?.map((member) => member.id)
       : [];
-    setMembers(memberIds);
+    // setMembers(memberIds);
   };
-  const handleCreationModalOpen = () => {
-    setCategoriesCreationOpen(true);
-    setInput("");
-    setColor(initialColor);
-    setMembers([]);
+  const handleOpenCreationModal = () => {
+    dispatch(openCreationModal());
+  };
+  const handleCloseCreationModal = () => {
+    dispatch(closeCreationModal());
   };
   const handleEditCategory = () => {
-    if (!currentActive) return;
-    setCategories([
-      ...categories.map((category) =>
-        category.id === currentActive.id
-          ? {
-              ...category,
-              name: input,
-              members:
-                members.map((memberId) => findUser(memberId) || friends[0]) ||
-                null,
-              color: color,
-            }
-          : category
-      ),
-    ]);
+    // if (!currentActive) return;
+    // setCategories([
+    //   ...categories.map((category) =>
+    //     category.id === currentActive.id
+    //       ? {
+    //           ...category,
+    //           name: input,
+    //           members:
+    //             members.map((memberId) => findUser(memberId) || friends[0]) ||
+    //             null,
+    //           color: color,
+    //         }
+    //       : category
+    //   ),
+    // ]);
     setCategoriesEditOpen(false);
   };
-  const findUser = (id: string) => friends.find((friend) => friend.id === id);
+  useEffect(() => {
+    dispatch(fetchCategories());
+  }, []);
+
   const renderMembers = (selected: string[]) => {
     console.log("members", members);
     return selected
@@ -144,8 +145,8 @@ const Categories = () => {
   return (
     <>
       <CustomModal
-        open={categoriesCreationOpen}
-        onClose={() => setCategoriesCreationOpen(false)}
+        open={creationModalOpen}
+        onClose={handleCloseCreationModal}
         disabled={!input}
         onConfirm={handleCreateCategory}
       >
@@ -157,7 +158,7 @@ const Categories = () => {
               <Select
                 value={color}
                 label="Color"
-                onChange={handleChange}
+                onChange={handleChangeColor}
                 renderValue={() => (
                   <div
                     color={getColor(color || "red")}
@@ -185,7 +186,7 @@ const Categories = () => {
               id="outlined-textarea"
               label="Name"
               value={input}
-              onChange={(event) => setInput(event.target.value)}
+              onChange={handleChangeInput}
             />
           </div>
           <div className="input checkmarks">
@@ -226,7 +227,7 @@ const Categories = () => {
               <Select
                 value={color}
                 label="Color"
-                onChange={handleChange}
+                onChange={handleChangeColor}
                 renderValue={() => (
                   <div
                     color={getColor(color || "red")}
@@ -254,7 +255,7 @@ const Categories = () => {
               id="outlined-textarea"
               label="Name"
               value={input}
-              onChange={(event) => setInput(event.target.value)}
+              onChange={handleChangeInput}
             />
           </div>
           <div className="input checkmarks">
@@ -370,7 +371,7 @@ const Categories = () => {
           )}
           <div className="container circle-container">
             <CircleButton
-              onClick={handleCreationModalOpen}
+              onClick={handleOpenCreationModal}
               className="circle-button"
               icon={
                 // <SvgSelector id="preloader" className="preloader" />
