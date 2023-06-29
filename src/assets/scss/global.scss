@@ -87,6 +87,7 @@ main{
 .preloader {
   stroke: getColor(white);
   width: 2.5rem;
+  margin: auto;
 }
 .circle-container {
   position: fixed;
@@ -127,7 +128,7 @@ main{
   height: 4rem;
   border-radius: 3.1rem;
   font-weight: 300;
-  &:disabled {
+  &.disabled {
     opacity: 0.5;
     pointer-events: none;
   }
@@ -166,6 +167,12 @@ main{
   display: flex;
   justify-content: center;
   align-items: center;
+  img{
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 50%;
+}
+
 }
 .letter{
   font-size: 1.2rem;

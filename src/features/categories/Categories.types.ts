@@ -1,5 +1,5 @@
 import { TColors } from "../../consts/colors";
-import { TUser } from "../../components/avatar/Avatar";
+import { TUser } from "../friends/Friends.types";
 
 export type TCategory = {
   id: string;
@@ -10,3 +10,9 @@ export type TCategory = {
   taskCount?: number;
   completedTaskCount?: number;
 };
+
+export interface ICreateCategoryRequest extends Partial<TCategory> {
+  name: string;
+  color: TColors;
+  memberIds: string[];
+}

@@ -1,0 +1,181 @@
+{
+  "categories": [
+    {
+      "id": "1",
+      "creatorId": "1",
+      "name": "Business",
+      "color": "blue",
+      "members": [
+        {
+          "id": "9",
+          "email": "dean@gmail.com",
+          "name": "robert",
+          "surname": "dean",
+          "picture": "https://cs12.pikabu.ru/images/big_size_comm/2022-04_3/1649648234142898124.jpg",
+          "status": "friends"
+        }
+      ],
+      "taskCount": 40,
+      "completedTaskCount": 20
+    },
+    {
+      "id": "2",
+      "creatorId": "1",
+      "name": "Personal",
+      "color": "violet",
+      "members": [],
+      "taskCount": 18,
+      "completedTaskCount": 6
+    },
+    {
+      "id": "3",
+      "creatorId": "1",
+      "name": "Groceries",
+      "color": "pink",
+      "members": [],
+      "taskCount": 40,
+      "completedTaskCount": 10
+    },
+    {
+      "id": "4",
+      "creatorId": "1",
+      "name": "Work",
+      "color": "violet",
+      "members": [],
+      "taskCount": 18,
+      "completedTaskCount": 3
+    },
+    {
+      "id": "6",
+      "creatorId": "1",
+      "name": "Business",
+      "color": "pink",
+      "members": [],
+      "taskCount": 40,
+      "completedTaskCount": 20
+    },
+    {
+      "id": "7",
+      "creatorId": "1",
+      "name": "Personal",
+      "color": "violet",
+      "members": [],
+      "taskCount": 40,
+      "completedTaskCount": 20
+    },
+    {
+      "id": "8",
+      "creatorId": "1",
+      "name": "Groceries",
+      "color": "aqua",
+      "members": [],
+      "taskCount": 40,
+      "completedTaskCount": 20
+    },
+    {
+      "id": "9",
+      "creatorId": "2",
+      "name": "Work",
+      "color": "blue",
+      "members": [],
+      "taskCount": 40,
+      "completedTaskCount": 20
+    },
+    {
+      "id": "10",
+      "creatorId": "2",
+      "name": "Daily routine",
+      "color": "blue",
+      "members": [],
+      "taskCount": 40,
+      "completedTaskCount": 20
+    }
+  ],
+  "tasks": [
+    {
+      "text": "Check emails ",
+      "color": "blue",
+      "isCompleted": false,
+      "id": "4"
+    },
+    {
+      "color": "blue",
+      "text": "sf",
+      "isCompleted": false,
+      "id": "3aiIHgK"
+    },
+    {
+      "text": "tgh",
+      "color": "blue",
+      "isCompleted": true,
+      "id": "h2xyIOb"
+    },
+    {
+      "text": "пакапкуп",
+      "color": "blue",
+      "isCompleted": true,
+      "id": "Af45kcg"
+    },
+    {
+      "text": "покакат",
+      "color": "blue",
+      "isCompleted": true,
+      "id": "-uxpVXf"
+    },
+    {
+      "text": "пить пив",
+      "color": "blue",
+      "isCompleted": true,
+      "id": "LR4grDf"
+    },
+    {
+      "text": "سنة",
+      "color": "blue",
+      "isCompleted": false,
+      "id": "tI8as_P"
+    },
+    {
+      "color": "blue",
+      "text": "v",
+      "isCompleted": false,
+      "id": "2qR6L-_"
+    }
+  ],
+  "users": [
+    {
+      "id": "4"
+    },
+    {
+      "id": "7",
+      "email": "moore@gmail.com",
+      "name": "tammy",
+      "surname": "moore",
+      "picture": null,
+      "status": "friends"
+    },
+    {
+      "id": "8",
+      "email": "hall@gmail.com",
+      "name": "tommy",
+      "surname": "hall",
+      "picture": "https://static-cse.canva.com/blob/191114/adult-attractive-casual-247885.jpg",
+      "status": "outgoing"
+    },
+    {
+      "id": "9",
+      "email": "dean@gmail.com",
+      "name": "robert",
+      "surname": "dean",
+      "picture": "https://cs12.pikabu.ru/images/big_size_comm/2022-04_3/1649648234142898124.jpg",
+      "status": "friends"
+    },
+    {
+      "id": "10",
+      "email": "lopez@gmail.com",
+      "name": "melissa",
+      "surname": "lopez",
+      "picture": null,
+      "status": "outgoing"
+    }
+  ]
+}

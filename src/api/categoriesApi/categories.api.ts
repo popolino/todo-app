@@ -1,9 +1,12 @@
-import { TCategory } from "../../features/categories/Categories.types";
-import { CategoriesMock } from "../../features/categories/Categories.mock";
+import {
+  ICreateCategoryRequest,
+  TCategory,
+} from "../../features/categories/Categories.types";
+import axios from "../index";
 
 export const categoriesApi = {
-  getFakeCategories: () =>
-    new Promise<{ data: TCategory[] }>((resolve) =>
-      setTimeout(() => resolve({ data: CategoriesMock }), 1000)
-    ),
+  getCategories: () => axios.get<TCategory[]>("categories"),
+  addCategory: (category: ICreateCategoryRequest) =>
+    axios.post<TCategory>("categories", category),
+  deleteTodo: (id: string) => axios.delete(`categories/${id}`),
 };

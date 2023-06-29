@@ -5,14 +5,17 @@ import { store } from "./app/store";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./index.css";
+import { SnackbarProvider } from "notistack";
 
 const container = document.getElementById("root")!;
 const root = createRoot(container);
 
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <SnackbarProvider autoHideDuration={3000} maxSnack={5}>
+    <Provider store={store}>
+      <App />
+    </Provider>
+  </SnackbarProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

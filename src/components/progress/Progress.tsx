@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./Progress.module.scss";
 import { TColors } from "src/consts/colors";
-import { getColor } from "src/utils/Index";
+import { getColor } from "src/utils";
 
 export type TProgressProps = {
   maximum: number;

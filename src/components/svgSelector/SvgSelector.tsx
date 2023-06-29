@@ -1,7 +1,7 @@
 import React from "react";
 import { TColors } from "src/consts/colors";
 import "src/assets/scss/global.scss";
-import { getColor } from "src/utils/Index";
+import { getColor } from "src/utils";
 
 type TSvgSelectorProps = {
   id: string;

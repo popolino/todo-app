@@ -6,7 +6,8 @@
   }
 }
 
-.input {
+.input,
+.input-error {
   .MuiInputBase-root {
     height: 4rem;
     border-radius: 2rem;
@@ -59,6 +60,25 @@
     path {
       fill: getColor(foreground);
     }
+  }
+  .css-wgai2y-MuiFormLabel-asterisk {
+    color: getColor(red) !important;
+    font-size: 1.4rem;
+  }
+  .css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+    transform:none;
+    height: 0.7rem;
+  }
+}
+.input-error {
+  .css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+    position: relative;
+  }
+  .MuiOutlinedInput-notchedOutline {
+    border-color: getColor(red) !important;
+  }
+  .css-1jy569b-MuiFormLabel-root-MuiInputLabel-root {
+    color: getColor(red) !important;
   }
 }
 .css-1poimk-MuiPaper-root-MuiMenu-paper-MuiPaper-root-MuiPopover-paper {
@@ -116,20 +136,19 @@
     margin: 0 !important;
     width: 100%;
   }
-  .css-14lo706{
+  .css-14lo706 {
     width: 5.5rem;
   }
-
-
 }
-.css-10hburv-MuiTypography-root{
-  font-size: 1.4rem!important;
+.css-10hburv-MuiTypography-root {
+  font-size: 1.4rem !important;
 }
 .checkbox,
 .checkbox-small,
-.checkbox-remember{
+.checkbox-remember {
   .css-ahj2mt-MuiTypography-root {
     color: getColor(foreground) !important;
+    white-space: nowrap;
   }
   .css-i4bv87-MuiSvgIcon-root {
     width: 2.2rem;
@@ -160,10 +179,10 @@
     font-size: 1.2rem;
   }
 }
-.checkbox-remember{
-  .css-ahj2mt-MuiTypography-root{
+.checkbox-remember {
+  .css-ahj2mt-MuiTypography-root {
     font-size: 1.1rem;
-    color: getColor(empty-message)!important;
+    color: getColor(empty-message) !important;
   }
 }
 .menu {
@@ -230,7 +249,7 @@
     color: getColor(main-text);
     margin: 3.5rem 0;
     background: none;
-    transform: translateX(0.5rem)!important;
+    transform: translateX(0.5rem) !important;
   }
   input::placeholder {
     color: getColor(foreground);

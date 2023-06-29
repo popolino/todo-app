@@ -2,7 +2,7 @@ import React from "react";
 import classes from "./Navigation.module.scss";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
 import clsx from "clsx";
-import logo from "src/img/logo.png";
+import logo from "src/assets/img/logo.png";
 import NavLinkComponent from "./NavLinkComponent";
 import { IconButton } from "@mui/material";
 

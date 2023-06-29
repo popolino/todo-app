@@ -1,14 +1,7 @@
 import React from "react";
 import classes from "./Avatar.module.scss";
 import clsx from "clsx";
-
-export type TUser = {
-  id: string;
-  name: string;
-  surname: string;
-  email: string;
-  picture: string | null;
-};
+import { TUser } from "src/features/friends/Friends.types";
 
 interface IAvatarProps extends Partial<TUser> {
   name: string;

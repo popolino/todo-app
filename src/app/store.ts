@@ -1,17 +1,27 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import categoriesReducer from 'src/features/categories/Categories.slice'
+import { configureStore, ActionCreatorsMapObject } from "@reduxjs/toolkit";
+import { tasksReducer } from "src/features/main/tasks/Tasks.slice";
+import { friendsReducer } from "src/features/friends/Friends.slice";
+import { useAppDispatch } from "./hooks";
+import bindActionCreators from "react-redux/es/utils/bindActionCreators";
+import { useMemo } from "react";
+import { BoundActions } from "./store.types";
+import { categoriesReducer } from "src/features/categories/Categories.slice";
+import { registrationReducer } from "src/features/authorization/Registration.slice";
 
 export const store = configureStore({
   reducer: {
-    categoriesReducer
+    categoriesReducer,
+    tasksReducer,
+    friendsReducer,
+    registrationReducer,
   },
 });
 
-export type AppDispatch = typeof store.dispatch;
-export type RootState = ReturnType<typeof store.getState>;
-export type AppThunk<ReturnType = void> = ThunkAction<
-  ReturnType,
-  RootState,
-  unknown,
-  Action<string>
->;
+export const useBoundActions = <Actions extends ActionCreatorsMapObject>(
+  actions: Actions
+): BoundActions<Actions> => {
+  const dispatch = useAppDispatch();
+
+  // @ts-ignore
+  return useMemo(() => bindActionCreators(actions, dispatch), []);
+};

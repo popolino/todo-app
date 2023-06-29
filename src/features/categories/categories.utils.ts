@@ -1,4 +1,4 @@
-import { friends } from "../friends/Friends.mock";
+import { TUser } from "../friends/Friends.types";
 
-export const findUser = (id: string) =>
+export const findUser = (friends: TUser[], id: string) =>
   friends.find((friend) => friend.id === id);

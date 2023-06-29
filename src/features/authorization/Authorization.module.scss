@@ -1,95 +1,107 @@
 @import "src/assets/scss/functions";
-.auth-wrapper{
+.auth-wrapper {
   height: 100vh;
   justify-content: center;
   margin-right: 5rem;
-  padding: 3rem 0;
+  padding: 3rem;
 }
-.auth-container{
+.auth-container {
   display: flex;
   border-radius: 2rem;
   padding: 0;
   height: auto;
   overflow: hidden;
   box-shadow: 0 0.5rem 1rem getColor(auth-shadow);
+  p, h1 {
+    white-space: nowrap;
+  }
 }
 
-.left-side, .right-side{
+.left-side,
+.right-side {
   height: 100%;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.left-side{
+.left-side {
   background: getColor(blue);
 }
-.right-side{
+.right-side {
   background: getColor(main-background);
+  button {
+    font-size: 1.2rem;
+    height: 4rem;
+    width: 100%;
+    border-radius: 3.1rem;
+    font-weight: 300;
+    background: getColor(blue);
+    color: getColor(white);
+    margin: 3rem 0 5rem;
+    &:disabled {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+  }
 }
-.auth, .auth-top{
+.auth,
+.auth-top {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
-
 }
-.auth{
+.auth {
   padding: 3rem 5.5rem;
-
-
 }
-.auth-top{
+.auth-top {
   margin: 4rem 0;
   padding: 1rem;
   height: 8rem;
   align-items: center;
   justify-content: space-between;
-  h1{
+  h1 {
     font-size: 2rem;
     font-weight: 600;
   }
-  p{
+  p {
     font-size: 1.3rem;
     font-weight: 500;
     color: getColor(foreground);
   }
 }
-.form{
-  padding: 2rem 0 1rem;
+.form {
+  padding: 3rem 0 1rem;
 }
-.bottom-container{
-justify-content: space-between;
+.bottom-container, .remember-container {
+  justify-content: space-between;
   align-items: center;
   display: flex;
-  p{
+  p {
     font-size: 1.1rem;
     color: getColor(empty-message);
   }
-  a{
+  a {
+    margin-left: 1rem;
     font-size: 1.1rem;
     color: getColor(blue);
+    white-space: nowrap;
   }
 }
-button{
-  font-size: 1.2rem;
-  height: 4rem;
-  width: 100%;
-  border-radius: 3.1rem;
-  font-weight: 300;
-  background: getColor(blue);
-color: getColor(white);
-  margin: 3rem 0 5rem;
-  &:disabled {
-    opacity: 0.5;
-    pointer-events: none;
-  }
+.bottom-container{
+  justify-content: center;
 }
-@media (max-width: 645px) {
-  body{
-    background-color: getColor(main-background);
+
+@media  (max-width: 649px) {
+  .auth-wrapper {
+    padding: 0;
   }
-  .left-side{
+  .auth-container {
+    border-radius: 0;
+    height: 100vh;
+  }
+  .left-side {
     display: none;
   }
 }

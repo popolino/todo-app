@@ -1,18 +1,24 @@
 import React from "react";
-import SvgSelector from "../../../components/svgSelector/SvgSelector";
 import classes from "src/features/friends/Friends.module.scss";
+import SvgSelector from "../../../components/svgSelector/SvgSelector";
 import clsx from "clsx";
 import { IconButton } from "@mui/material";
 
-interface TRequest {
+interface TPending {
   name?: string;
   picture: string | null;
-  onClick: () => void;
+  onDelete: () => void;
+  onAddFriend: () => void;
 }
 
-const Outgoing: React.FC<TRequest> = ({ name, picture, onClick }) => {
+const Pending: React.FC<TPending> = ({
+  name,
+  picture,
+  onDelete,
+  onAddFriend,
+}) => {
   return (
-    <div className={clsx("outgoing", "module")}>
+    <div className={clsx("pending", "module")}>
       <div className="module-part">
         <div className="avatar">
           {picture === null ? (
@@ -27,7 +33,14 @@ const Outgoing: React.FC<TRequest> = ({ name, picture, onClick }) => {
         <IconButton
           size="medium"
           className={classes["icon-button"]}
-          onClick={onClick}
+          onClick={onAddFriend}
+        >
+          <SvgSelector id="check_mark" />
+        </IconButton>
+        <IconButton
+          size="medium"
+          className={classes["icon-button"]}
+          onClick={onDelete}
         >
           <SvgSelector id="cancel" />
         </IconButton>
@@ -36,4 +49,4 @@ const Outgoing: React.FC<TRequest> = ({ name, picture, onClick }) => {
   );
 };
 
-export default Outgoing;
+export default Pending;

@@ -19,22 +19,23 @@ import CustomModal from "src/components/custom-modal/CustomModal";
 import clsx from "clsx";
 import Avatar from "src/components/avatar/Avatar";
 import { colors, TColors } from "src/consts/colors";
-import { getColor } from "src/utils/Index";
+import { getColor } from "src/utils";
 import { TransitionGroup } from "react-transition-group";
-import { friends } from "../friends/Friends.mock";
 import { TCategory } from "./Categories.types";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 import {
-  changeColor,
-  changeMembers,
-  closeCreationModal,
-  createCategory,
-  deleteCategory,
+  addCategoryAsync,
+  categoriesActions,
+  deleteCategoryAsync,
   fetchCategories,
-  openCreationModal,
-  setInput,
 } from "./Categories.slice";
+import { fetchFriends } from "../friends/Friends.slice";
 import { findUser } from "./categories.utils";
+import { useBoundActions } from "../../app/store";
+import { useSnackbar } from "notistack";
+import { getUsers } from "../friends/friends.utils";
+import { TUser } from "../friends/Friends.types";
+
 const userId = "1";
 
 const ITEM_HEIGHT = 48;
@@ -47,28 +48,51 @@ const MenuProps = {
     },
   },
 };
+const allActions = {
+  fetchFriends,
+  addCategoryAsync,
+  deleteCategoryAsync,
+  fetchCategories,
+  ...categoriesActions,
+};
 
 const Categories = () => {
-  const { categories, input, color, members, creationModalOpen } =
-    useAppSelector((state) => state.categoriesReducer);
-  const dispatch = useAppDispatch();
+  const boundActions = useBoundActions(allActions);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const input = useAppSelector((state) => state.categoriesReducer.input);
+  const categories = useAppSelector(
+    (state) => state.categoriesReducer.categories
+  );
+  const members = useAppSelector((state) => state.categoriesReducer.members);
+  const creationModalOpen = useAppSelector(
+    (state) => state.categoriesReducer.creationModalOpen
+  );
+  const editModalOpen = useAppSelector(
+    (state) => state.categoriesReducer.editModalOpen
+  );
+  const message = useAppSelector((state) => state.categoriesReducer.message);
+  const status = useAppSelector((state) => state.categoriesReducer.status);
+  const color = useAppSelector((state) => state.categoriesReducer.color);
+  const users = useAppSelector((state) => state.friendsReducer.users);
 
   const [currentActive, setCurrentActive] = useState<TCategory | undefined>();
-  const [categoriesEditOpen, setCategoriesEditOpen] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = !!anchorEl;
 
-  const handleChangeMembers = (event: SelectChangeEvent<typeof members>) => {
+  const friends = getUsers(users, "friends");
+
+  const handleChangeMembers = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
-    dispatch(
-      changeMembers(typeof value === "string" ? value.split(",") : value)
+    boundActions.changeMembers(
+      typeof value === "string" ? value.split(",") : value
     );
   };
 
   const handleChangeColor = (event: SelectChangeEvent) => {
-    dispatch(changeColor(event.target.value as TColors));
+    boundActions.changeColor(event.target.value as TColors);
   };
 
   const handleClick = (
@@ -80,34 +104,24 @@ const Categories = () => {
   };
   const handleDelete = () => {
     if (!currentActive) return;
-    dispatch(deleteCategory(currentActive.id));
+    boundActions.deleteCategoryAsync(currentActive.id);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
   const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch(setInput(event.target.value));
+    boundActions.setInput(event.target.value);
   };
-  const handleCreateCategory = () => {
-    dispatch(createCategory());
-  };
-  const handleEditModalOpen = () => {
-    if (!currentActive) return;
-    setCategoriesEditOpen(true);
-    // setInput(currentActive.name);
-
-    // setColor(currentActive.color);
-    const memberIds: string[] = currentActive.members
-      ? currentActive.members?.map((member) => member.id)
-      : [];
-    // setMembers(memberIds);
-  };
+  const handleCreateCategory = () => boundActions.addCategoryAsync();
+  const handleOpenEditModal = () =>
+    currentActive && boundActions.openEditModal(currentActive);
+  const handleCloseEditModal = () => boundActions.closeEditModal();
   const handleOpenCreationModal = () => {
-    dispatch(openCreationModal());
+    boundActions.openCreationModal();
   };
   const handleCloseCreationModal = () => {
-    dispatch(closeCreationModal());
+    boundActions.closeCreationModal();
   };
   const handleEditCategory = () => {
     // if (!currentActive) return;
@@ -125,16 +139,20 @@ const Categories = () => {
     //       : category
     //   ),
     // ]);
-    setCategoriesEditOpen(false);
+    // setCategoriesEditOpen(false);
   };
-  useEffect(() => {
-    dispatch(fetchCategories());
-  }, []);
 
   const renderMembers = (selected: string[]) => {
-    console.log("members", members);
     return selected
-      .map((userId) => `${findUser(userId)?.name} ${findUser(userId)?.surname}`)
+      .map((userId) =>
+        friends.length && !currentActive?.members.length
+          ? `${findUser(friends, userId)?.name} ${
+              findUser(friends, userId)?.surname
+            }`
+          : `${findUser(currentActive?.members as TUser[], userId)?.name} ${
+              findUser(currentActive?.members as TUser[], userId)?.surname
+            }`
+      )
       .join(", ");
   };
 
@@ -142,6 +160,16 @@ const Categories = () => {
     categories.filter((category) =>
       own ? category.creatorId === userId : category.creatorId !== userId
     );
+  useEffect(() => {
+    boundActions.fetchCategories();
+  }, []);
+  useEffect(() => {
+    message &&
+      enqueueSnackbar(message, {
+        variant: status !== "failed" ? "info" : "error",
+      });
+  }, [message]);
+
   return (
     <>
       <CustomModal
@@ -195,10 +223,11 @@ const Categories = () => {
               <Select
                 multiple
                 value={members}
-                onChange={handleChangeMembers}
-                input={<OutlinedInput label="Tag" />}
                 renderValue={renderMembers}
+                input={<OutlinedInput label="Tag" />}
                 MenuProps={MenuProps}
+                onOpen={boundActions.fetchFriends}
+                onChange={handleChangeMembers}
               >
                 {friends.map((friend) => (
                   <MenuItem key={friend.id} value={friend.id}>
@@ -214,8 +243,8 @@ const Categories = () => {
         </div>
       </CustomModal>
       <CustomModal
-        open={categoriesEditOpen}
-        onClose={() => setCategoriesEditOpen(false)}
+        open={editModalOpen}
+        onClose={handleCloseEditModal}
         disabled={!input}
         onConfirm={handleEditCategory}
       >
@@ -264,10 +293,11 @@ const Categories = () => {
               <Select
                 multiple
                 value={members}
-                onChange={handleChangeMembers}
                 input={<OutlinedInput label="Tag" />}
                 renderValue={renderMembers}
                 MenuProps={MenuProps}
+                onChange={handleChangeMembers}
+                onOpen={boundActions.fetchFriends}
               >
                 {friends.map((friend) => (
                   <MenuItem key={friend.id} value={friend.id}>
@@ -295,7 +325,7 @@ const Categories = () => {
         {currentActive?.creatorId === userId && (
           <MenuItem
             onClick={() => {
-              handleEditModalOpen();
+              handleOpenEditModal();
               handleClose();
             }}
           >

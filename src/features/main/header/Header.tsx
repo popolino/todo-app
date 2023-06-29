@@ -35,7 +35,6 @@ const Header: React.FC<THeaderProps> = ({ onOpen }) => {
       clearTimeout(themeTimeout);
     };
   };
-
   useEffect(() => {
     setTheme(theme);
     document.documentElement.setAttribute("color-scheme", theme);

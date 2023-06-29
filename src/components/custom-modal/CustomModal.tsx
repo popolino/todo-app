@@ -2,10 +2,12 @@ import React from "react";
 import { Box, IconButton, Modal } from "@mui/material";
 import classes from "./CustomModal.module.scss";
 import SvgSelector from "../svgSelector/SvgSelector";
+import clsx from "clsx";
 
 type TCustomModalProps = {
   children: JSX.Element;
   open: boolean;
+  loading?: boolean;
   disabled?: boolean;
   onClose: () => void;
   onConfirm: () => void;
@@ -17,6 +19,7 @@ const CustomModal: React.FC<TCustomModalProps> = ({
   disabled,
   onClose,
   onConfirm,
+  loading,
 }) => {
   return (
     <>
@@ -37,11 +40,15 @@ const CustomModal: React.FC<TCustomModalProps> = ({
               Cancel
             </button>
             <button
-              className="blue-button"
+              className={clsx("blue-button", { disabled: disabled })}
               onClick={onConfirm}
-              disabled={disabled}
+              disabled={disabled || loading}
             >
-              Confirm
+              {loading ? (
+                <SvgSelector id="preloader" className="preloader" />
+              ) : (
+                "Confirm"
+              )}
             </button>
           </div>
         </Box>

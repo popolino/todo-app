@@ -3,7 +3,7 @@ import classes from "./Task.module.scss";
 import { Checkbox } from "@mui/material";
 import SvgSelector from "src/components/svgSelector/SvgSelector";
 import clsx from "clsx";
-import { TTask } from "../Tasks";
+import { TTask } from "../Tasks.types";
 
 interface ITaskProps extends Partial<TTask> {
   select: boolean;

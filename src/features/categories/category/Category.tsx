@@ -2,7 +2,7 @@ import React from "react";
 import classes from "./Category.module.scss";
 import clsx from "clsx";
 import { IconButton } from "@mui/material";
-import { getColor } from "src/utils/Index";
+import { getColor } from "src/utils";
 import { TColors } from "../../../consts/colors";
 import { TCategory } from "../Categories.types";
 
