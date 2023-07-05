@@ -8,9 +8,7 @@ import {
   isRejectedAction,
 } from "../../utils";
 import { RootState } from "../../app/store.types";
-import { v4 as uuidv4 } from "uuid";
 
-const userId = "1";
 const initialColor = colors[0].name;
 export interface ICategoriesState {
   categories: TCategory[];
@@ -76,6 +74,37 @@ const categoriesSlice = createSlice({
       state.input = action.payload.name;
       state.members = action.payload.members.map((m) => m.id);
       state.color = action.payload.color;
+    },
+    editModal: (state, action: PayloadAction<TCategory>) => {
+      console.log(action.payload);
+      if (!action.payload) return;
+      state.categories = [
+        ...state.categories.map((category) =>
+          action.payload && category.id === action.payload.id
+            ? {
+                ...category,
+                name: state.input,
+                members: action.payload.members,
+                color: action.payload.color,
+              }
+            : category
+        ),
+      ];
+      // if (!currentActive) return;
+      // setCategories([
+      //   ...categories.map((category) =>
+      //     category.id === currentActive.id
+      //       ? {
+      //           ...category,
+      //           name: input,
+      //           members:
+      //             members.map((memberId) => findUser(memberId) || friends[0]) ||
+      //             null,
+      //           color: color,
+      //         }
+      //       : category
+      //   ),
+      // ]);
     },
   },
   extraReducers: (builder) => {
@@ -143,18 +172,9 @@ export const addCategoryAsync = createAsyncThunk(
       memberIds: globalState.categoriesReducer.members,
     };
     try {
-      // const { data } = await categoriesApi.addCategory(category);
-      // на момент пока фейковая апишка
-      const fakeData: TCategory = {
-        id: uuidv4(),
-        name: category.name,
-        color: category.color,
-        members: [],
-        creatorId: userId,
-        completedTaskCount: 0,
-        taskCount: 0,
-      };
-      return fakeData;
+      const { data } = await categoriesApi.addCategory(category);
+      console.log(data);
+      return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
@@ -171,6 +191,28 @@ export const deleteCategoryAsync = createAsyncThunk<
     return rejectWithValue(e.message);
   }
 });
+
+export const editCategoryAsync = createAsyncThunk(
+  "categoriesReducer/editCategoryAsync",
+  async (
+    currentCategory: {
+      id: string;
+      name: string;
+      color: TColors;
+      memberIds: string[];
+    },
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    try {
+      const { data } = await categoriesApi.editCategory(currentCategory);
+      console.log(data);
+      // dispatch(categoriesActions.editModal(data));
+      return data;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
 
 export const { actions: categoriesActions, reducer: categoriesReducer } =
   categoriesSlice;

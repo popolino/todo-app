@@ -1,5 +1,5 @@
 @import "src/assets/scss/functions";
-$nav-width:37.5rem;
+$nav-width: 37.5rem;
 
 .navigation {
   background: getColor(nabvar-background);
@@ -14,31 +14,30 @@ $nav-width:37.5rem;
   overflow-y: scroll;
   overflow-x: hidden;
   transition: 0.3s;
-  &.open{
+  &.open {
     left: 0;
   }
   @media (max-width: 500px) {
-    $nav-width:75vw;
+    $nav-width: 75vw;
     width: $nav-width;
     left: -$nav-width;
-
   }
 }
-.top{
+.top {
   display: flex;
   justify-content: space-between;
 }
 .hide {
   width: 9rem;
   height: 9rem;
-  margin: -2.3rem!important; ;
+  margin: -2.3rem !important;
 
   svg {
     height: 4.5rem;
   }
 }
 .avatar {
-    background: getColor(foreground);
+  background: getColor(foreground);
   margin-top: 1.6rem;
   border: 0.5rem solid getColor(nabvar-background);
   min-width: 8rem;
@@ -70,8 +69,11 @@ $nav-width:37.5rem;
   display: flex;
   align-items: center;
   padding: 1.5rem 0;
+  cursor: pointer;
 }
+
 .title {
+  text-transform: capitalize;
   color: getColor(navbar-title);
   font-size: 1.4rem;
 }
@@ -97,10 +99,14 @@ $nav-width:37.5rem;
   flex-direction: column;
   justify-content: space-between;
 }
-.active {
+.active,
+.chapter:hover {
   background: getColor(navbar-hover);
-  transition: 0.3s ease-in;
   border-radius: 2rem;
   padding-left: 2rem;
   margin-left: -2rem;
+}
+.active {
+  background: getColor(navbar-active);
+  transition: 0.3s ease-in;
 }

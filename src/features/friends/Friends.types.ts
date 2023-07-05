@@ -4,5 +4,5 @@ export type TUser = {
   surname: string;
   email: string;
   picture: string | null;
-  status: "friends" | "pending" | "outgoing";
+  status?: "friends" | "pending" | "outgoing";
 };

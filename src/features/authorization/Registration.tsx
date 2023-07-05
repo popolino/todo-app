@@ -7,11 +7,13 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { useBoundActions } from "../../app/store";
 import { useSnackbar } from "notistack";
 import { useAppSelector } from "../../app/hooks";
-import { createUser, registrationActions } from "./Registration.slice";
+import { fetchCreateUser, authorizationActions } from "./Authorization.slice";
+
 const allActions = {
-  createUser,
-  ...registrationActions,
+  fetchCreateUser,
+  ...authorizationActions,
 };
+
 export type TRegistrationFields = {
   email: string;
   name: string;
@@ -22,8 +24,8 @@ const Registration = () => {
   const boundActions = useBoundActions(allActions);
   const { enqueueSnackbar } = useSnackbar();
 
-  const message = useAppSelector((state) => state.registrationReducer.message);
-  const status = useAppSelector((state) => state.registrationReducer.status);
+  const message = useAppSelector((state) => state.authorizationReducer.message);
+  const status = useAppSelector((state) => state.authorizationReducer.status);
 
   const { handleSubmit, control, setValue, watch, formState } =
     useForm<TRegistrationFields>({
@@ -32,7 +34,7 @@ const Registration = () => {
     });
   const onSubmit: SubmitHandler<TRegistrationFields> = (data) => {
     console.log(data);
-    boundActions.createUser(data);
+    boundActions.fetchCreateUser(data);
   };
   useEffect(() => {
     message &&

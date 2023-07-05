@@ -7,11 +7,18 @@ interface TNavigation {
   path: string;
   id: string;
   title: string;
+  onClick?: () => void;
 }
 
-const NavLinkComponent: React.FC<TNavigation> = ({ path, id, title }) => {
+const NavLinkComponent: React.FC<TNavigation> = ({
+  path,
+  id,
+  title,
+  onClick,
+}) => {
   return (
     <NavLink
+      onClick={onClick}
       to={path}
       className={(navData) =>
         navData.isActive

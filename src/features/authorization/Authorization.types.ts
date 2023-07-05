@@ -9,3 +9,6 @@ export type TLoginUserDto = {
   password: string;
   rememberMe: boolean;
 };
+export type TAuthResponse = {
+  access_token: string;
+};

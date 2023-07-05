@@ -6,14 +6,14 @@ import bindActionCreators from "react-redux/es/utils/bindActionCreators";
 import { useMemo } from "react";
 import { BoundActions } from "./store.types";
 import { categoriesReducer } from "src/features/categories/Categories.slice";
-import { registrationReducer } from "src/features/authorization/Registration.slice";
+import { authorizationReducer } from "src/features/authorization/Authorization.slice";
 
 export const store = configureStore({
   reducer: {
     categoriesReducer,
     tasksReducer,
     friendsReducer,
-    registrationReducer,
+    authorizationReducer,
   },
 });
 

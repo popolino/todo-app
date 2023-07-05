@@ -1,22 +1,42 @@
-import React from "react";
+import React, { useEffect } from "react";
 import classes from "./Navigation.module.scss";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
 import clsx from "clsx";
 import logo from "src/assets/img/logo.png";
 import NavLinkComponent from "./NavLinkComponent";
 import { IconButton } from "@mui/material";
+import { useBoundActions } from "../../app/store";
+import {
+  authorizationActions,
+  fetchCreateUser,
+  fetchLogout,
+} from "../authorization/Authorization.slice";
+import { routes } from "../../routes/routes";
 
 type TNavigationProps = {
   persistent: boolean;
   open: boolean;
-  onClose: () => void;
+  setOpen: (open: boolean) => void;
+  onLogout: () => void;
 };
 
 const Navigation: React.FC<TNavigationProps> = ({
   persistent,
   open,
-  onClose,
+  setOpen,
+  onLogout,
 }) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        open ? setOpen(false) : setOpen(true);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open]);
   return (
     <div
       className={clsx(classes.navigation, {
@@ -30,7 +50,7 @@ const Navigation: React.FC<TNavigationProps> = ({
         <IconButton
           classes={{ sizeLarge: classes.hide }}
           size="large"
-          onClick={onClose}
+          onClick={() => setOpen(false)}
         >
           <SvgSelector id="hide" />
         </IconButton>
@@ -41,22 +61,23 @@ const Navigation: React.FC<TNavigationProps> = ({
       </div>
       <div className={classes.container}>
         <div className={classes.chapters}>
-          <NavLinkComponent path="/tasks" id="tasks" title="Tasks" />
-          <NavLinkComponent
-            path="/notifications"
-            id="notification"
-            title="Notifications"
-          />
-          <NavLinkComponent
-            path="/categories"
-            id="categories"
-            title="Categories"
-          />
-          <NavLinkComponent path="/friends" id="friends" title="Friends" />
-          <NavLinkComponent path="/settings" id="settings" title="Settings" />
+          {routes
+            .filter((route) => route.display)
+            .map((route) => (
+              <NavLinkComponent
+                path={route.path}
+                id={route.iconId}
+                title={route.label}
+              />
+            ))}
         </div>
         <div className={classes.footer}>
-          <NavLinkComponent path="/login" id="logout" title="Logout" />
+          <NavLinkComponent
+            path="/login"
+            id="logout"
+            title="Logout"
+            onClick={onLogout}
+          />
           <img src={logo} alt="" />
           <div className={classes.text}>
             <h1>Todo</h1>

@@ -43,16 +43,28 @@ const CustomTextField: React.FC<TCustomTextFieldProps> = ({
             multiline={false}
           />
         ) : (
-          <FormControl
+          <TextField
+            label={label}
             className={clsx({ "input-error": error, input: !error })}
+            error
+            type="password"
             onChange={onChange}
             onBlur={onBlur}
-            error
-            focused={false}
-          >
-            <InputLabel>Password</InputLabel>
-            <OutlinedInput value={value} type="password" label="Password" />
-          </FormControl>
+            value={value}
+            autoFocus={false}
+            multiline={false}
+          />
+          // <FormControl
+          //   className={clsx({ "input-error": error, input: !error })}
+          //   onChange={onChange}
+          //   onBlur={onBlur}
+          //   error
+          //   focused={false}
+          //
+          // >
+          //   <InputLabel>Password</InputLabel>
+          //   <OutlinedInput value={value} type="password" label="Password" />
+          // </FormControl>
         )}
         {message && (
           <div className={classes["helper-text"]}>

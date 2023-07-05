@@ -21,12 +21,13 @@ import Avatar from "src/components/avatar/Avatar";
 import { colors, TColors } from "src/consts/colors";
 import { getColor } from "src/utils";
 import { TransitionGroup } from "react-transition-group";
-import { TCategory } from "./Categories.types";
+import { ICreateCategoryRequest, TCategory } from "./Categories.types";
 import { useAppSelector } from "../../app/hooks";
 import {
   addCategoryAsync,
   categoriesActions,
   deleteCategoryAsync,
+  editCategoryAsync,
   fetchCategories,
 } from "./Categories.slice";
 import { fetchFriends } from "../friends/Friends.slice";
@@ -35,8 +36,6 @@ import { useBoundActions } from "../../app/store";
 import { useSnackbar } from "notistack";
 import { getUsers } from "../friends/friends.utils";
 import { TUser } from "../friends/Friends.types";
-
-const userId = "1";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -52,7 +51,9 @@ const allActions = {
   fetchFriends,
   addCategoryAsync,
   deleteCategoryAsync,
+  editCategoryAsync,
   fetchCategories,
+
   ...categoriesActions,
 };
 
@@ -75,6 +76,9 @@ const Categories = () => {
   const status = useAppSelector((state) => state.categoriesReducer.status);
   const color = useAppSelector((state) => state.categoriesReducer.color);
   const users = useAppSelector((state) => state.friendsReducer.users);
+  const authUser = useAppSelector(
+    (state) => state.authorizationReducer.authUser
+  );
 
   const [currentActive, setCurrentActive] = useState<TCategory | undefined>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -123,23 +127,17 @@ const Categories = () => {
   const handleCloseCreationModal = () => {
     boundActions.closeCreationModal();
   };
-  const handleEditCategory = () => {
-    // if (!currentActive) return;
-    // setCategories([
-    //   ...categories.map((category) =>
-    //     category.id === currentActive.id
-    //       ? {
-    //           ...category,
-    //           name: input,
-    //           members:
-    //             members.map((memberId) => findUser(memberId) || friends[0]) ||
-    //             null,
-    //           color: color,
-    //         }
-    //       : category
-    //   ),
-    // ]);
-    // setCategoriesEditOpen(false);
+  const handleEditCategory = (currentCategory: {
+    id: string;
+    name: string;
+    color: TColors;
+    memberIds: string[];
+  }) => {
+    console.log(currentCategory);
+    if (currentCategory === undefined) return;
+    boundActions.editCategoryAsync(currentCategory);
+
+    handleCloseEditModal();
   };
 
   const renderMembers = (selected: string[]) => {
@@ -158,7 +156,9 @@ const Categories = () => {
 
   const getCategories = ({ own }: { own: boolean }) =>
     categories.filter((category) =>
-      own ? category.creatorId === userId : category.creatorId !== userId
+      own
+        ? category.creatorId === authUser?.id
+        : category.creatorId !== authUser?.id
     );
   useEffect(() => {
     boundActions.fetchCategories();
@@ -246,7 +246,15 @@ const Categories = () => {
         open={editModalOpen}
         onClose={handleCloseEditModal}
         disabled={!input}
-        onConfirm={handleEditCategory}
+        onConfirm={() =>
+          currentActive &&
+          handleEditCategory({
+            id: currentActive.id,
+            name: "dd",
+            color: "violet",
+            memberIds: [],
+          })
+        }
       >
         <div className={classes["modal-container"]}>
           <h1>Edit category</h1>
@@ -322,7 +330,7 @@ const Categories = () => {
         <MenuItem onClick={handleClose}>
           <SvgSelector id="view" /> View
         </MenuItem>
-        {currentActive?.creatorId === userId && (
+        {currentActive?.creatorId === authUser?.id && (
           <MenuItem
             onClick={() => {
               handleOpenEditModal();
@@ -334,7 +342,7 @@ const Categories = () => {
             Edit
           </MenuItem>
         )}
-        {currentActive?.creatorId === userId ? (
+        {currentActive?.creatorId === authUser?.id ? (
           <MenuItem
             onClick={() => {
               handleClose();
@@ -385,7 +393,7 @@ const Categories = () => {
               <div className={classes.categories}>
                 <TransitionGroup>
                   {categories
-                    .filter((category) => category.creatorId !== userId)
+                    .filter((category) => category.creatorId !== authUser?.id)
                     .map((category) => (
                       <Collapse key={category.id}>
                         <Category

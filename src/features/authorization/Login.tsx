@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import to_do_list from "src/assets/img/to_do_list.png";
 import clsx from "clsx";
 import classes from "./Authorization.module.scss";
@@ -13,21 +13,40 @@ import {
 } from "@mui/material";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import CustomTextField from "../../components/helperText/CustomTextField";
+import { useBoundActions } from "../../app/store";
+import {
+  authorizationActions,
+  fetchCreateUser,
+  fetchLogin,
+} from "./Authorization.slice";
+import { useAppSelector } from "../../app/hooks";
+import { Navigate } from "react-router-dom";
 
+export type TLoginFields = {
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
+const allActions = {
+  fetchLogin,
+  ...authorizationActions,
+};
 const Login = () => {
-  type TLoginFields = {
-    email: string;
-    password: string;
-    rememberMe: boolean;
-  };
-  const { handleSubmit, control, setValue, watch, formState } =
-    useForm<TLoginFields>({
-      mode: "all",
-      defaultValues: { email: "", password: "", rememberMe: false },
-    });
+  const boundActions = useBoundActions(allActions);
+
+  const isAuth = useAppSelector((state) => state.authorizationReducer.isAuth);
+
+  const { handleSubmit, control, formState } = useForm<TLoginFields>({
+    mode: "all",
+    defaultValues: { email: "", password: "", rememberMe: false },
+  });
   const onSubmit: SubmitHandler<TLoginFields> = (data) => {
-    alert(JSON.stringify(data));
+    boundActions.fetchLogin(data);
   };
+
+  if (isAuth) {
+    return <Navigate to={"/"} />;
+  }
   return (
     <>
       <div className={clsx("main-container", classes["auth-wrapper"])}>
@@ -93,7 +112,7 @@ const Login = () => {
                         fieldState: { error },
                       }) => (
                         <CustomTextField
-                          label="Surname"
+                          label="Password"
                           type="password"
                           error={!!error}
                           message={error?.message}
