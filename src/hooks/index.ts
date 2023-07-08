@@ -39,3 +39,15 @@ export const useHorizontalScroll = () => {
   }, [scrollArea.current]);
   return scrollArea;
 };
+
+export const useKeyboardListener = (key: string, callback: () => void) => {
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === key) callback();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+};

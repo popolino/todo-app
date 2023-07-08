@@ -1,17 +1,12 @@
-import React, { useEffect } from "react";
+import React from "react";
 import classes from "./Navigation.module.scss";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
 import clsx from "clsx";
 import logo from "src/assets/img/logo.png";
 import NavLinkComponent from "./NavLinkComponent";
 import { IconButton } from "@mui/material";
-import { useBoundActions } from "../../app/store";
-import {
-  authorizationActions,
-  fetchCreateUser,
-  fetchLogout,
-} from "../authorization/Authorization.slice";
 import { routes } from "../../routes/routes";
+import { useKeyboardListener } from "src/hooks";
 
 type TNavigationProps = {
   persistent: boolean;
@@ -26,17 +21,7 @@ const Navigation: React.FC<TNavigationProps> = ({
   setOpen,
   onLogout,
 }) => {
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        open ? setOpen(false) : setOpen(true);
-      }
-    };
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open]);
+  useKeyboardListener("Escape", () => setOpen(!open));
   return (
     <div
       className={clsx(classes.navigation, {
