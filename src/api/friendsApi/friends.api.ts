@@ -2,7 +2,11 @@ import { axiosInstance } from "../index";
 import { TUser } from "src/features/friends/Friends.types";
 
 export const friendsApi = {
+  getAllUsers: () => axiosInstance.get<TUser[]>("users/test"),
+
   getFriends: () => axiosInstance.get<TUser[]>("users"),
-  deleteFriend: (id: string) => axiosInstance.delete(`users/${id}`),
-  acceptFriend: (id: string) => axiosInstance.put(`users/${id}`),
+
+  addFriend: (email: string) => axiosInstance.post(`users/relations/${email}`),
+  acceptFriend: (id: string) => axiosInstance.put(`users/relations/${id}`),
+  deleteFriend: (id: string) => axiosInstance.delete(`users/relations/${id}`),
 };

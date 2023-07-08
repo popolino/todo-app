@@ -21,7 +21,11 @@ import Avatar from "src/components/avatar/Avatar";
 import { colors, TColors } from "src/consts/colors";
 import { getColor } from "src/utils";
 import { TransitionGroup } from "react-transition-group";
-import { ICreateCategoryRequest, TCategory } from "./Categories.types";
+import {
+  ICreateCategoryRequest,
+  TCategory,
+  TEditCategoryRequest,
+} from "./Categories.types";
 import { useAppSelector } from "../../app/hooks";
 import {
   addCategoryAsync,
@@ -127,14 +131,7 @@ const Categories = () => {
   const handleCloseCreationModal = () => {
     boundActions.closeCreationModal();
   };
-  const handleEditCategory = (currentCategory: {
-    id: string;
-    name: string;
-    color: TColors;
-    memberIds: string[];
-  }) => {
-    console.log(currentCategory);
-    if (currentCategory === undefined) return;
+  const handleEditCategory = (currentCategory: TEditCategoryRequest) => {
     boundActions.editCategoryAsync(currentCategory);
 
     handleCloseEditModal();
@@ -250,8 +247,8 @@ const Categories = () => {
           currentActive &&
           handleEditCategory({
             id: currentActive.id,
-            name: "dd",
-            color: "violet",
+            name: input,
+            color: color,
             memberIds: [],
           })
         }

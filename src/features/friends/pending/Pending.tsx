@@ -8,14 +8,14 @@ interface TPending {
   name?: string;
   picture: string | null;
   onDelete: () => void;
-  onAddFriend: () => void;
+  onAcceptFriend: () => void;
 }
 
 const Pending: React.FC<TPending> = ({
   name,
   picture,
   onDelete,
-  onAddFriend,
+  onAcceptFriend,
 }) => {
   return (
     <div className={clsx("pending", "module")}>
@@ -33,7 +33,7 @@ const Pending: React.FC<TPending> = ({
         <IconButton
           size="medium"
           className={classes["icon-button"]}
-          onClick={onAddFriend}
+          onClick={onAcceptFriend}
         >
           <SvgSelector id="check_mark" />
         </IconButton>

@@ -16,3 +16,12 @@ export interface ICreateCategoryRequest extends Partial<TCategory> {
   color: TColors;
   memberIds: string[];
 }
+export type TEditCategoryRequest = {
+  id: string;
+  name: string;
+  color: TColors;
+  memberIds: string[];
+};
+export type TDeleteCategoryRequest = {
+  categoryIds: string[];
+};

@@ -1,4 +1,9 @@
-import { ICreateCategoryRequest, TCategory } from "./Categories.types";
+import {
+  ICreateCategoryRequest,
+  TCategory,
+  TDeleteCategoryRequest,
+  TEditCategoryRequest,
+} from "./Categories.types";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { categoriesApi } from "../../api/categoriesApi/categories.api";
 import { colors, TColors } from "../../consts/colors";
@@ -75,41 +80,23 @@ const categoriesSlice = createSlice({
       state.members = action.payload.members.map((m) => m.id);
       state.color = action.payload.color;
     },
-    editModal: (state, action: PayloadAction<TCategory>) => {
-      console.log(action.payload);
-      if (!action.payload) return;
+    editModal: (state, action: PayloadAction<TEditCategoryRequest>) => {
       state.categories = [
         ...state.categories.map((category) =>
           action.payload && category.id === action.payload.id
             ? {
                 ...category,
                 name: state.input,
-                members: action.payload.members,
-                color: action.payload.color,
+                // members: action.payload.memberIds,
+                color: state.color,
               }
             : category
         ),
       ];
-      // if (!currentActive) return;
-      // setCategories([
-      //   ...categories.map((category) =>
-      //     category.id === currentActive.id
-      //       ? {
-      //           ...category,
-      //           name: input,
-      //           members:
-      //             members.map((memberId) => findUser(memberId) || friends[0]) ||
-      //             null,
-      //           color: color,
-      //         }
-      //       : category
-      //   ),
-      // ]);
     },
   },
   extraReducers: (builder) => {
     // FETCH
-
     builder.addCase(fetchCategories.pending, (state) => {
       state.meta.fetching = true;
     });
@@ -132,6 +119,18 @@ const categoriesSlice = createSlice({
       state.creationModalOpen = false;
     });
     builder.addCase(addCategoryAsync.rejected, (state, { payload }) => {
+      state.meta.creating = false;
+    });
+    builder.addCase(deleteCategoryAsync.pending, (state) => {
+      state.meta.creating = true;
+    });
+    builder.addCase(deleteCategoryAsync.fulfilled, (state, { payload }) => {
+      state.meta.creating = false;
+      state.categories = state.categories.filter(
+        (category) => category.id !== payload
+      );
+    });
+    builder.addCase(deleteCategoryAsync.rejected, (state, { payload }) => {
       state.meta.creating = false;
     });
 
@@ -173,40 +172,34 @@ export const addCategoryAsync = createAsyncThunk(
     };
     try {
       const { data } = await categoriesApi.addCategory(category);
-      console.log(data);
       return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
   }
 );
-export const deleteCategoryAsync = createAsyncThunk<
-  undefined,
-  string,
-  { rejectValue: string }
->("categoriesReducer/deleteCategoryAsync", async (id, { rejectWithValue }) => {
-  try {
-    await categoriesApi.deleteTodo(id);
-  } catch (e: any) {
-    return rejectWithValue(e.message);
+
+export const deleteCategoryAsync = createAsyncThunk(
+  "categoriesReducer/deleteCategoryAsync",
+  async (id: string, { rejectWithValue, dispatch }) => {
+    try {
+      await categoriesApi.deleteCategory(id);
+      return id;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
   }
-});
+);
 
 export const editCategoryAsync = createAsyncThunk(
   "categoriesReducer/editCategoryAsync",
   async (
-    currentCategory: {
-      id: string;
-      name: string;
-      color: TColors;
-      memberIds: string[];
-    },
-    { rejectWithValue, getState, dispatch }
+    currentCategory: TEditCategoryRequest,
+    { rejectWithValue, dispatch }
   ) => {
     try {
       const { data } = await categoriesApi.editCategory(currentCategory);
-      console.log(data);
-      // dispatch(categoriesActions.editModal(data));
+      dispatch(categoriesActions.editModal(data));
       return data;
     } catch (e: any) {
       return rejectWithValue(e.message);

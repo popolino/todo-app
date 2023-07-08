@@ -65,6 +65,7 @@ const Navigation: React.FC<TNavigationProps> = ({
             .filter((route) => route.display)
             .map((route) => (
               <NavLinkComponent
+                key={route.path}
                 path={route.path}
                 id={route.iconId}
                 title={route.label}

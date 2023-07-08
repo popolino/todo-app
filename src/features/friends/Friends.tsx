@@ -7,23 +7,25 @@ import clsx from "clsx";
 import { useAppSelector } from "../../app/hooks";
 import { useBoundActions } from "../../app/store";
 import {
+  acceptFriendAsync,
   addFriendAsync,
   deleteFriendAsync,
+  fetchAllUsersAsync,
   fetchFriends,
   friendsActions,
 } from "./Friends.slice";
 import Pending from "./pending/Pending";
 import Outgoing from "./outgoing/Outgoing";
 import { useSnackbar } from "notistack";
-import { TTask } from "../main/tasks/Tasks.types";
-import { TUser } from "./Friends.types";
 import { TransitionGroup } from "react-transition-group";
 import Collapse from "@mui/material/Collapse";
 import { getUsers } from "./friends.utils";
 const allActions = {
   deleteFriendAsync,
-  addFriendAsync,
+  acceptFriendAsync,
   fetchFriends,
+  fetchAllUsersAsync,
+  addFriendAsync,
   ...friendsActions,
 };
 
@@ -32,14 +34,21 @@ const Friends = () => {
   const { enqueueSnackbar } = useSnackbar();
 
   const users = useAppSelector((state) => state.friendsReducer.users);
+  const allUsers = useAppSelector((state) => state.friendsReducer.allUsers);
   const message = useAppSelector((state) => state.friendsReducer.message);
   const status = useAppSelector((state) => state.friendsReducer.status);
 
-  const handleDelete = (id: string) => boundActions.deleteFriendAsync(id);
-  const addFriend = (id: string) => boundActions.addFriendAsync(id);
+  const [searchInput, setSearchInput] = useState<string>("");
 
+  const handleDelete = (id: string) => boundActions.deleteFriendAsync(id);
+  const acceptFriend = (id: string) => boundActions.acceptFriendAsync(id);
+  const addFriend = (email: string) => {
+    boundActions.addFriendAsync(email);
+    setSearchInput("");
+  };
   useEffect(() => {
     boundActions.fetchFriends();
+    boundActions.fetchAllUsersAsync();
   }, []);
   useEffect(() => {
     message &&
@@ -47,13 +56,25 @@ const Friends = () => {
         variant: status !== "failed" ? "info" : "error",
       });
   }, [message]);
+
   return (
     <div className="main-container">
       <div className="container">
         <div className="chapter">Friends</div>
         <div className={clsx(classes["send-pending"], "module")}>
-          <input type="text" placeholder="Enter user email" />
-          <button className="blue-button">Send request</button>
+          <input
+            type="text"
+            placeholder="Enter user email"
+            onChange={(event: React.FormEvent<HTMLInputElement>) =>
+              setSearchInput(event.currentTarget.value)
+            }
+          />
+          <button
+            className="blue-button"
+            onClick={() => addFriend(searchInput)}
+          >
+            Send request
+          </button>
         </div>
         <div className="title">PENDING</div>
         <TransitionGroup>
@@ -63,7 +84,7 @@ const Friends = () => {
                 <Pending
                   name={`${pending.name} ${pending.surname}`}
                   picture={pending.picture}
-                  onAddFriend={() => addFriend(pending.id)}
+                  onAcceptFriend={() => acceptFriend(pending.id)}
                   onDelete={() => handleDelete(pending.id)}
                 />
               </Collapse>

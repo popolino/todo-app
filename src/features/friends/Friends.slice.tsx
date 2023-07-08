@@ -12,6 +12,7 @@ import { tasksApi } from "../../api/tasksApi/tasks.api";
 
 export interface IFriendsState {
   users: TUser[];
+  allUsers: TUser[];
   status: "idle" | "loading" | "failed";
   message: any;
   meta: {
@@ -23,6 +24,7 @@ export interface IFriendsState {
 }
 export const initialState: IFriendsState = {
   users: [],
+  allUsers: [],
   status: "idle",
   message: "",
   meta: {
@@ -36,7 +38,11 @@ export const initialState: IFriendsState = {
 const friendsSlice = createSlice({
   name: "friendsReducer",
   initialState,
-  reducers: {},
+  reducers: {
+    setAllUsers: (state, action) => {
+      state.allUsers = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     // FETCH
     builder.addCase(fetchFriends.pending, (state) => {
@@ -66,12 +72,12 @@ const friendsSlice = createSlice({
       state.meta.deleting = false;
     });
 
-    // ADD
+    // ACCEPT
 
-    builder.addCase(addFriendAsync.pending, (state) => {
+    builder.addCase(acceptFriendAsync.pending, (state) => {
       state.meta.updating = true;
     });
-    builder.addCase(addFriendAsync.fulfilled, (state, { payload }) => {
+    builder.addCase(acceptFriendAsync.fulfilled, (state, { payload }) => {
       state.meta.updating = false;
       const user = state.users.find((user) => payload === user.id);
       state.users.map(
@@ -79,7 +85,28 @@ const friendsSlice = createSlice({
           user.id === payload && [...state.users, (user.status = "friends")]
       );
       if (!user) return;
-      state.message = `Task with name "${user.name}" add`;
+      state.message = `User with name "${user.name}" add`;
+    });
+    builder.addCase(acceptFriendAsync.rejected, (state, { payload }) => {
+      state.meta.updating = false;
+    });
+
+    // ADD
+
+    builder.addCase(addFriendAsync.pending, (state) => {
+      state.meta.updating = true;
+    });
+    builder.addCase(addFriendAsync.fulfilled, (state, { payload }) => {
+      state.meta.updating = false;
+
+      const user = state.users.find((user) => payload === user.id);
+      console.log(user);
+      state.users.map(
+        (user) =>
+          user.email === payload && [...state.users, (user.status = "outgoing")]
+      );
+      if (!user) return;
+      state.message = `User with name "${user.name}" add`;
     });
     builder.addCase(addFriendAsync.rejected, (state, { payload }) => {
       state.meta.updating = false;
@@ -114,9 +141,21 @@ export const fetchFriends = createAsyncThunk<
 
 export const addFriendAsync = createAsyncThunk(
   "friendsReducer/addFriendAsync",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      await friendsApi.addFriend(email);
+      return email;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+
+export const acceptFriendAsync = createAsyncThunk(
+  "friendsReducer/acceptFriendAsync",
   async (id: string, { rejectWithValue }) => {
     try {
-      const { data } = await friendsApi.acceptFriend(id);
+      await friendsApi.acceptFriend(id);
       return id;
     } catch (e: any) {
       return rejectWithValue(e.message);
@@ -130,6 +169,22 @@ export const deleteFriendAsync = createAsyncThunk(
     try {
       await friendsApi.deleteFriend(id);
       return id;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+export const fetchAllUsersAsync = createAsyncThunk<
+  TUser[],
+  void,
+  { rejectValue: string }
+>(
+  "friendsReducer/fetchAllUsersAsync",
+  async (_, { rejectWithValue, dispatch }) => {
+    try {
+      const { data } = await friendsApi.getAllUsers();
+      dispatch(friendsActions.setAllUsers(data));
+      return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
