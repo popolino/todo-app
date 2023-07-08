@@ -42,8 +42,8 @@ const Friends = () => {
 
   const handleDelete = (id: string) => boundActions.deleteFriendAsync(id);
   const acceptFriend = (id: string) => boundActions.acceptFriendAsync(id);
-  const addFriend = (email: string) => {
-    boundActions.addFriendAsync(email);
+  const addFriend = async (email: string) => {
+    await boundActions.addFriendAsync(email).unwrap();
     setSearchInput("");
   };
   useEffect(() => {
@@ -65,8 +65,9 @@ const Friends = () => {
           <input
             type="text"
             placeholder="Enter user email"
-            onChange={(event: React.FormEvent<HTMLInputElement>) =>
-              setSearchInput(event.currentTarget.value)
+            value={searchInput}
+            onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+              setSearchInput(event.target.value)
             }
           />
           <button

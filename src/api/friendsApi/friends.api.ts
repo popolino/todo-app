@@ -6,7 +6,7 @@ export const friendsApi = {
 
   getFriends: () => axiosInstance.get<TUser[]>("users"),
 
-  addFriend: (email: string) => axiosInstance.post(`users/relations/${email}`),
+  addFriend: (email: string) => axiosInstance.post<TUser>(`users/relations/${email}` ),
   acceptFriend: (id: string) => axiosInstance.put(`users/relations/${id}`),
   deleteFriend: (id: string) => axiosInstance.delete(`users/relations/${id}`),
 };

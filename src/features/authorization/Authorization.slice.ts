@@ -136,6 +136,7 @@ export const fetchLogout = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await authorizationApi.logoutUser();
+      localStorage.removeItem("access_token");
       dispatch(authorizationSlice.actions.setLogout());
       dispatch(authorizationSlice.actions.setIsAuth(false));
       return response.data;

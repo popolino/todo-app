@@ -98,15 +98,8 @@ const friendsSlice = createSlice({
     });
     builder.addCase(addFriendAsync.fulfilled, (state, { payload }) => {
       state.meta.updating = false;
-
-      const user = state.users.find((user) => payload === user.id);
-      console.log(user);
-      state.users.map(
-        (user) =>
-          user.email === payload && [...state.users, (user.status = "outgoing")]
-      );
-      if (!user) return;
-      state.message = `User with name "${user.name}" add`;
+      state.users.push(payload);
+      state.message = `User with name "${payload.name}" add`;
     });
     builder.addCase(addFriendAsync.rejected, (state, { payload }) => {
       state.meta.updating = false;
@@ -143,8 +136,8 @@ export const addFriendAsync = createAsyncThunk(
   "friendsReducer/addFriendAsync",
   async (email: string, { rejectWithValue }) => {
     try {
-      await friendsApi.addFriend(email);
-      return email;
+      const { data } = await friendsApi.addFriend(email);
+      return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
