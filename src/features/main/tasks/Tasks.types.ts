@@ -12,3 +12,8 @@ export interface ICreateTaskRequest extends Partial<TTask> {
   text: string;
   isCompleted: boolean;
 }
+
+export type TCreateTaskRequest = {
+  categoryId: string;
+  text: string;
+};

@@ -40,6 +40,7 @@ import { useBoundActions } from "../../app/store";
 import { useSnackbar } from "notistack";
 import { getUsers } from "../friends/friends.utils";
 import { TUser } from "../friends/Friends.types";
+import { useNavigate } from "react-router-dom";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -89,6 +90,7 @@ const Categories = () => {
   const open = !!anchorEl;
 
   const friends = getUsers(users, "friends");
+  const navigate = useNavigate();
 
   const handleChangeMembers = (event: SelectChangeEvent<string[]>) => {
     const {
@@ -324,7 +326,12 @@ const Categories = () => {
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem
+          onClick={() => {
+            // currentActive && console.log(currentActive.id);
+            navigate("/tasks");
+          }}
+        >
           <SvgSelector id="view" /> View
         </MenuItem>
         {currentActive?.creatorId === authUser?.id && (
@@ -334,7 +341,6 @@ const Categories = () => {
               handleClose();
             }}
           >
-            {" "}
             <SvgSelector id="edit" />
             Edit
           </MenuItem>

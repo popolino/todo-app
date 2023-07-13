@@ -57,6 +57,10 @@ const Tasks: React.FC<TTasksProps> = () => {
   const updating = useAppSelector((state) => state.tasksReducer.meta.updating);
   const message = useAppSelector((state) => state.tasksReducer.message);
   const status = useAppSelector((state) => state.tasksReducer.status);
+  const color = useAppSelector((state) => state.categoriesReducer.color);
+  const authUser = useAppSelector(
+    (state) => state.authorizationReducer.authUser
+  );
 
   // local state
   const [contextMenu, setContextMenu] = useState<TCoordinates>(null);
@@ -96,14 +100,8 @@ const Tasks: React.FC<TTasksProps> = () => {
     setSelected([]);
     // setTasks([...tasks.filter((task) => !selected.includes(task.id))]);
   };
-
-  //componentDidMount useEffect [input]
-
-  //componentDidUpdate
-
-  // side effect
   useEffect(() => {
-    boundActions.fetchTasks();
+    boundActions.fetchTasks("3922308c-003c-420b-91f6-5d756b647283");
   }, []);
   useEffect(() => {
     message &&
@@ -111,7 +109,7 @@ const Tasks: React.FC<TTasksProps> = () => {
         variant: status !== "failed" ? "info" : "error",
       });
   }, [message]);
-
+  console.log(color);
   return (
     <>
       <CustomModal
@@ -214,7 +212,7 @@ const Tasks: React.FC<TTasksProps> = () => {
                 <Collapse key={task.id}>
                   <Task
                     text={task.text}
-                    color={task.color}
+                    color={color}
                     select={selected.includes(task.id)}
                     isCompleted={task.isCompleted}
                     onChange={() => handleCompleted(task)}

@@ -140,11 +140,11 @@ const tasksSlice = createSlice({
 
 export const fetchTasks = createAsyncThunk<
   TTask[],
-  void,
+  string,
   { rejectValue: string }
->("tasksReducer/fetchTasks", async (_, { rejectWithValue }) => {
+>("tasksReducer/fetchTasks", async (id, { rejectWithValue }) => {
   try {
-    const { data } = await tasksApi.getTasks();
+    const { data } = await tasksApi.getTasks(id);
     return data;
   } catch (e: any) {
     return rejectWithValue(e.message);
@@ -156,9 +156,8 @@ export const addTaskAsync = createAsyncThunk(
     const globalState = getState() as RootState;
     try {
       const task = {
-        color: globalState.tasksReducer.color,
+        categoryId: "3922308c-003c-420b-91f6-5d756b647283",
         text: globalState.tasksReducer.input,
-        isCompleted: false,
       };
       const { data } = await tasksApi.addTask(task);
       return data;
