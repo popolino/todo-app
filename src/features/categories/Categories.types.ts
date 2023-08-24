@@ -7,8 +7,8 @@ export type TCategory = {
   name: string;
   color: TColors;
   members: TUser[];
-  taskCount?: number;
-  completedTaskCount?: number;
+  totalTasks: number;
+  completedTasks: number;
 };
 
 export interface ICreateCategoryRequest extends Partial<TCategory> {

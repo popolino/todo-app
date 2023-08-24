@@ -2,18 +2,16 @@ import React from "react";
 import classes from "./CategoriesMain.module.scss";
 
 import CategoryMain from "./category-main/CategoryMain";
-import { TColors } from "../../../consts/colors";
 import { useHorizontalScroll } from "src/hooks";
-type TCategory = {
-  id: string;
-  tasks: number;
-  completedTasks: number;
-  color: TColors;
-  name: string;
+import { TCategory } from "../../categories/Categories.types";
+
+type TCategoriesMainProps = {
+  categories: TCategory[];
 };
 
-const CategoriesMain = () => {
+const CategoriesMain: React.FC<TCategoriesMainProps> = ({ categories }) => {
   const scrollArea = useHorizontalScroll();
+  console.log(categories);
   return (
     <>
       <div className="container">
@@ -22,15 +20,15 @@ const CategoriesMain = () => {
       </div>
       <div className={classes.gradient}>
         <div className={classes.categories} ref={scrollArea}>
-          {/*{categories.map((category) => (*/}
-          {/*  <CategoryMain*/}
-          {/*    key={category.id}*/}
-          {/*    maximum={category.tasks}*/}
-          {/*    value={category.completedTasks}*/}
-          {/*    color={category.color}*/}
-          {/*    name={category.name}*/}
-          {/*  />*/}
-          {/*))}*/}
+          {categories.map((category) => (
+            <CategoryMain
+              key={category.id}
+              maximum={category.totalTasks}
+              value={category.completedTasks}
+              color={category.color}
+              name={category.name}
+            />
+          ))}
         </div>
       </div>
     </>

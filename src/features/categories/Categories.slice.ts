@@ -89,6 +89,8 @@ const categoriesSlice = createSlice({
                 name: state.input,
                 // members: action.payload.memberIds,
                 color: state.color,
+                // completedTask: category.completedTask,
+                // totalTasks: category.totalTasks,
               }
             : category
         ),

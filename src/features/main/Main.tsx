@@ -8,26 +8,32 @@ import {
   authorizationActions,
   fetchLogout,
 } from "../authorization/Authorization.slice";
+import { fetchCategories } from "../categories/Categories.slice";
 
 const allActions = {
   fetchLogout,
+  fetchCategories,
   ...authorizationActions,
 };
 const Main = () => {
   const boundActions = useBoundActions(allActions);
 
   const isAuth = useAppSelector((state) => state.authorizationReducer.isAuth);
+  const categories = useAppSelector(
+    (state) => state.categoriesReducer.categories
+  );
 
   useEffect(() => {
-    console.log(isAuth);
-  }, [isAuth]);
+    boundActions.fetchCategories();
+  }, []);
 
+  console.log(categories);
   if (!isAuth) {
     return <Navigate to={"/login"} />;
   }
   return (
     <>
-      <CategoriesMain />
+      <CategoriesMain categories={categories} />
       <Tasks />
     </>
   );

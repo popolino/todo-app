@@ -17,6 +17,7 @@ import CustomModal from "src/components/custom-modal/CustomModal";
 import { useAppSelector } from "src/app/hooks";
 import {
   addTaskAsync,
+  completeTaskAsync,
   deleteTaskAsync,
   editTaskAsync,
   fetchTasks,
@@ -28,6 +29,7 @@ import { useSnackbar } from "notistack";
 
 const allActions = {
   addTaskAsync,
+  completeTaskAsync,
   deleteTaskAsync,
   editTaskAsync,
   fetchTasks,
@@ -85,8 +87,13 @@ const Tasks: React.FC<TTasksProps> = () => {
     else setSelected([...selected, currentId]);
   };
   const handleContextClose = () => setContextMenu(null);
-  const handleCompleted = (task: TTask) =>
-    boundActions.editTaskAsync({ ...task, isCompleted: !task?.isCompleted });
+  // const handleCompleted = (task: TTask) =>
+  //   boundActions.editTaskAsync({ ...task, isCompleted: !task?.isCompleted });
+  const handleCompleted = (id: string, task: TTask) =>
+    boundActions.completeTaskAsync({
+      ...task,
+      isCompleted: !task?.isCompleted,
+    });
   const handleEditTask = () =>
     currentActive &&
     boundActions.editTaskAsync({ ...currentActive, text: input });
@@ -101,7 +108,7 @@ const Tasks: React.FC<TTasksProps> = () => {
     // setTasks([...tasks.filter((task) => !selected.includes(task.id))]);
   };
   useEffect(() => {
-    boundActions.fetchTasks("3922308c-003c-420b-91f6-5d756b647283");
+    boundActions.fetchTasks("9d5ae48b-9d9a-4a07-afa7-f748ca28bd3c");
   }, []);
   useEffect(() => {
     message &&
@@ -109,6 +116,7 @@ const Tasks: React.FC<TTasksProps> = () => {
         variant: status !== "failed" ? "info" : "error",
       });
   }, [message]);
+
   console.log(color);
   return (
     <>
@@ -215,7 +223,7 @@ const Tasks: React.FC<TTasksProps> = () => {
                     color={color}
                     select={selected.includes(task.id)}
                     isCompleted={task.isCompleted}
-                    onChange={() => handleCompleted(task)}
+                    onChange={() => handleCompleted(task.id, task)}
                     onSelect={() =>
                       selected.length > 0 && handleSelect(task.id)
                     }

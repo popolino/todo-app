@@ -13,12 +13,15 @@ const CategoryMain: React.FC<ICategoryProps> = ({
   value,
   color,
   name,
-}) => (
-  <div className={classes.category}>
-    <div className={classes.tasks}>{maximum} tasks</div>
-    <div className={classes.name}>{name}</div>
-    <Progress maximum={maximum} value={value} color={color} />
-  </div>
-);
+}) => {
+  console.log(value);
+  return (
+    <div className={classes.category}>
+      <div className={classes.tasks}>{maximum} tasks</div>
+      <div className={classes.name}>{name}</div>
+      <Progress maximum={maximum} value={value} color={color} />
+    </div>
+  );
+};
 
 export default CategoryMain;

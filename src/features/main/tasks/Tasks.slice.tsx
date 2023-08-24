@@ -156,10 +156,22 @@ export const addTaskAsync = createAsyncThunk(
     const globalState = getState() as RootState;
     try {
       const task = {
-        categoryId: "3922308c-003c-420b-91f6-5d756b647283",
+        categoryId: "9d5ae48b-9d9a-4a07-afa7-f748ca28bd3c",
         text: globalState.tasksReducer.input,
       };
       const { data } = await tasksApi.addTask(task);
+      return data;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  }
+);
+export const completeTaskAsync = createAsyncThunk(
+  "tasksReducer/completeTaskAsync",
+  async (task: TTask, { rejectWithValue, getState }) => {
+    const globalState = getState() as RootState;
+    try {
+      const { data } = await tasksApi.completeTask(task.id, task);
       return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
