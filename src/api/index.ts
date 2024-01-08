@@ -3,7 +3,7 @@ import { authorizationApi } from "./authorizationApi/authorization.api";
 
 // export default axios.create({ baseURL: "http://localhost:3001" });
 
-export const BASE_URL = `http://localhost:5050/`;
+export const BASE_URL = `http://localhost:5050/api/`;
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
