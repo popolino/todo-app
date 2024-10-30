@@ -1,5 +1,6 @@
 import {
   ICreateCategoryRequest,
+  IGetCategoryRequest,
   TCategory,
   TDeleteCategoryRequest,
   TEditCategoryRequest,
@@ -7,7 +8,8 @@ import {
 import { axiosInstance } from "../index";
 
 export const categoriesApi = {
-  getCategories: () => axiosInstance.get<TCategory[]>("categories"),
+  getCategories: (userId: string) =>
+    axiosInstance.get<TCategory[]>(`categories/?userId=${userId}`),
   addCategory: (category: ICreateCategoryRequest) =>
     axiosInstance.post<TCategory>("categories", category),
   editCategory: (category: TEditCategoryRequest) =>

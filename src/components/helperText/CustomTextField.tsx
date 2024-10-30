@@ -33,6 +33,7 @@ const CustomTextField: React.FC<TCustomTextFieldProps> = ({
       <div className={className}>
         {type === "input" ? (
           <TextField
+            autoComplete="email"
             label={label}
             className={clsx({ "input-error": error, input: !error })}
             error

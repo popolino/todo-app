@@ -33,17 +33,25 @@ const allActions = {
 };
 const Login = () => {
   const boundActions = useBoundActions(allActions);
-
   const isAuth = useAppSelector((state) => state.authorizationReducer.isAuth);
-
-  const { handleSubmit, control, formState } = useForm<TLoginFields>({
+  const { handleSubmit, control, formState, setValue } = useForm<TLoginFields>({
     mode: "all",
     defaultValues: { email: "", password: "", rememberMe: false },
   });
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("userEmail");
+    if (savedEmail) {
+      setValue("email", savedEmail);
+    }
+  }, [setValue]);
   const onSubmit: SubmitHandler<TLoginFields> = (data) => {
     boundActions.fetchLogin(data);
+    if (data.rememberMe) {
+      localStorage.setItem("userEmail", data.email);
+    } else {
+      localStorage.removeItem("userEmail");
+    }
   };
-
   if (isAuth) {
     return <Navigate to={"/"} />;
   }

@@ -25,6 +25,7 @@ import {
 import { TTask } from "./Tasks.types";
 import { useBoundActions } from "../../../app/store";
 import { useSnackbar } from "notistack";
+import category from "../../categories/category/Category";
 
 const allActions = {
   addTaskAsync,
@@ -46,20 +47,21 @@ const Tasks: React.FC<TTasksProps> = () => {
 
   // state
   const editModalOpen = useAppSelector(
-    (state) => state.tasksReducer.editModalOpen
+    (state) => state.tasksReducer.editModalOpenTask,
   );
   const creationModalOpen = useAppSelector(
-    (state) => state.tasksReducer.creationModalOpen
+    (state) => state.tasksReducer.creationModalOpenTask,
   );
-  const input = useAppSelector((state) => state.tasksReducer.input);
+  const input = useAppSelector((state) => state.tasksReducer.inputTask);
   const tasks = useAppSelector((state) => state.tasksReducer.tasks);
   const creating = useAppSelector((state) => state.tasksReducer.meta.creating);
   const updating = useAppSelector((state) => state.tasksReducer.meta.updating);
   const message = useAppSelector((state) => state.tasksReducer.message);
   const status = useAppSelector((state) => state.tasksReducer.status);
-  const color = useAppSelector((state) => state.categoriesReducer.color);
+  const color = useAppSelector((state) => state.tasksReducer.color);
+  const categoryId = useAppSelector((state) => state.tasksReducer.categoryId);
   const authUser = useAppSelector(
-    (state) => state.authorizationReducer.authUser
+    (state) => state.authorizationReducer.authUser,
   );
 
   // local state
@@ -69,12 +71,12 @@ const Tasks: React.FC<TTasksProps> = () => {
   const [taskDeletionOpen, setTaskDeletionOpen] = useState(false);
 
   // handlers
-  const handleChangeInput = (input: string) => boundActions.setInput(input);
-  const handleOpenCreationModal = () => boundActions.openCreationModal();
+  const handleChangeInput = (input: string) => boundActions.setInputTask(input);
+  const handleOpenCreationModal = () => boundActions.openCreationModalTask();
   const handleCloseCreationModal = () => boundActions.closeCreationModal();
   const handleCloseEditModal = () => boundActions.closeEditModal();
   const handleOpenEditModal = () =>
-    currentActive && boundActions.openEditModal(currentActive?.text);
+    currentActive && boundActions.openEditModalTask(currentActive?.text);
   const handleCreateTask = () => boundActions.addTaskAsync();
   const handleDelete = () =>
     currentActive && boundActions.deleteTaskAsync(currentActive.id);
@@ -101,15 +103,11 @@ const Tasks: React.FC<TTasksProps> = () => {
     // setTasks([...tasks.filter((task) => !selected.includes(task.id))]);
   };
   useEffect(() => {
-    boundActions.fetchTasks("3922308c-003c-420b-91f6-5d756b647283");
-  }, []);
-  useEffect(() => {
     message &&
       enqueueSnackbar(message, {
         variant: status !== "failed" ? "info" : "error",
       });
   }, [message]);
-  console.log(color);
   return (
     <>
       <CustomModal

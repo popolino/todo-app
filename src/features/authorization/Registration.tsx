@@ -8,6 +8,7 @@ import { useBoundActions } from "../../app/store";
 import { useSnackbar } from "notistack";
 import { useAppSelector } from "../../app/hooks";
 import { fetchCreateUser, authorizationActions } from "./Authorization.slice";
+import { Navigate } from "react-router-dom";
 
 const allActions = {
   fetchCreateUser,
@@ -22,6 +23,8 @@ export type TRegistrationFields = {
 };
 const Registration = () => {
   const boundActions = useBoundActions(allActions);
+  const isAuth = useAppSelector((state) => state.authorizationReducer.isAuth);
+
   const { enqueueSnackbar } = useSnackbar();
 
   const message = useAppSelector((state) => state.authorizationReducer.message);
@@ -36,13 +39,10 @@ const Registration = () => {
     console.log(data);
     boundActions.fetchCreateUser(data);
   };
-  useEffect(() => {
-    message &&
-      enqueueSnackbar(message, {
-        variant: status !== "failed" ? "info" : "error",
-      });
-  }, [message]);
 
+  if (isAuth) {
+    return <Navigate to={"/"} />;
+  }
   return (
     <>
       <div className={clsx("main-container", classes["auth-wrapper"])}>

@@ -18,10 +18,6 @@ const Main = () => {
 
   const isAuth = useAppSelector((state) => state.authorizationReducer.isAuth);
 
-  useEffect(() => {
-    console.log(isAuth);
-  }, [isAuth]);
-
   if (!isAuth) {
     return <Navigate to={"/login"} />;
   }

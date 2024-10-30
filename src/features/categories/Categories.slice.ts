@@ -13,6 +13,8 @@ import {
   isRejectedAction,
 } from "../../utils";
 import { RootState } from "../../app/store.types";
+import categories from "./Categories";
+import login from "../authorization/Login";
 
 const initialColor = colors[0].name;
 export interface ICategoriesState {
@@ -90,7 +92,7 @@ const categoriesSlice = createSlice({
                 // members: action.payload.memberIds,
                 color: state.color,
               }
-            : category
+            : category,
         ),
       ];
     },
@@ -127,7 +129,7 @@ const categoriesSlice = createSlice({
     builder.addCase(deleteCategoryAsync.fulfilled, (state, { payload }) => {
       state.meta.creating = false;
       state.categories = state.categories.filter(
-        (category) => category.id !== payload
+        (category) => category.id !== payload,
       );
     });
     builder.addCase(deleteCategoryAsync.rejected, (state, { payload }) => {
@@ -150,11 +152,11 @@ const categoriesSlice = createSlice({
 
 export const fetchCategories = createAsyncThunk<
   TCategory[],
-  void,
+  string,
   { rejectValue: string }
->("categoriesReducer/fetchCategories", async (_, { rejectWithValue }) => {
+>("categoriesReducer/fetchCategories", async (userId, { rejectWithValue }) => {
   try {
-    const { data } = await categoriesApi.getCategories();
+    const { data } = await categoriesApi.getCategories(userId);
     return data;
   } catch (e: any) {
     return rejectWithValue(e.message);
@@ -176,7 +178,7 @@ export const addCategoryAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const deleteCategoryAsync = createAsyncThunk(
@@ -188,14 +190,14 @@ export const deleteCategoryAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const editCategoryAsync = createAsyncThunk(
   "categoriesReducer/editCategoryAsync",
   async (
     currentCategory: TEditCategoryRequest,
-    { rejectWithValue, dispatch }
+    { rejectWithValue, dispatch },
   ) => {
     try {
       const { data } = await categoriesApi.editCategory(currentCategory);
@@ -204,7 +206,7 @@ export const editCategoryAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const { actions: categoriesActions, reducer: categoriesReducer } =

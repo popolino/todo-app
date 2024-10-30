@@ -114,7 +114,7 @@ export const fetchCreateUser = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const fetchLogin = createAsyncThunk(
@@ -123,12 +123,12 @@ export const fetchLogin = createAsyncThunk(
     try {
       const response = await authorizationApi.loginUser(formValues);
       dispatch(authorizationSlice.actions.setIsAuth(true));
-      localStorage.setItem("access_token", `${response.data.access_token}`);
+      localStorage.setItem("token", response.data.token);
       return response.data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const fetchLogout = createAsyncThunk(
@@ -136,14 +136,15 @@ export const fetchLogout = createAsyncThunk(
   async (_, { rejectWithValue, dispatch }) => {
     try {
       const response = await authorizationApi.logoutUser();
-      localStorage.removeItem("access_token");
+      localStorage.removeItem("token");
       dispatch(authorizationSlice.actions.setLogout());
       dispatch(authorizationSlice.actions.setIsAuth(false));
+      dispatch(authorizationSlice.actions.setAuthUser(null));
       return response.data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const fetchAuthMe = createAsyncThunk(
@@ -153,11 +154,12 @@ export const fetchAuthMe = createAsyncThunk(
       const response = await authorizationApi.authMe();
       dispatch(authorizationSlice.actions.setIsAuth(true));
       dispatch(authorizationActions.setAuthUser(response.data));
+      console.log(response.data);
       return response.data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const { actions: authorizationActions, reducer: authorizationReducer } =

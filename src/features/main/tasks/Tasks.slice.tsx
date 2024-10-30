@@ -12,10 +12,11 @@ import { RootState } from "src/app/store.types";
 const initialColor = colors[0].name;
 export interface ITasksState {
   tasks: TTask[];
-  input: string;
+  inputTask: string;
   color: TColors;
-  creationModalOpen: boolean;
-  editModalOpen: boolean;
+  categoryId: string;
+  creationModalOpenTask: boolean;
+  editModalOpenTask: boolean;
   status: "idle" | "loading" | "failed";
   message: any;
   meta: {
@@ -27,11 +28,12 @@ export interface ITasksState {
 }
 export const initialState: ITasksState = {
   tasks: [],
-  input: "",
+  inputTask: "",
   color: initialColor,
+  categoryId: "",
   status: "idle",
-  creationModalOpen: false,
-  editModalOpen: false,
+  creationModalOpenTask: false,
+  editModalOpenTask: false,
   message: "",
   meta: {
     fetching: false,
@@ -45,22 +47,29 @@ const tasksSlice = createSlice({
   name: "tasksReducer",
   initialState,
   reducers: {
-    setInput: (state, action: PayloadAction<string>) => {
-      state.input = action.payload;
+    setInputTask: (state, action: PayloadAction<string>) => {
+      state.inputTask = action.payload;
     },
     closeCreationModal: (state) => {
-      state.creationModalOpen = false;
+      state.creationModalOpenTask = false;
     },
-    openCreationModal: (state) => {
-      state.creationModalOpen = true;
-      state.input = "";
+    openCreationModalTask: (state) => {
+      state.creationModalOpenTask = true;
+      state.inputTask = "";
     },
-    openEditModal: (state, action: PayloadAction<string>) => {
-      state.editModalOpen = true;
-      state.input = action.payload;
+    openEditModalTask: (state, action: PayloadAction<string>) => {
+      state.editModalOpenTask = true;
+      state.inputTask = action.payload;
     },
     closeEditModal: (state) => {
-      state.editModalOpen = false;
+      state.editModalOpenTask = false;
+    },
+    setCategoryId: (state, action: PayloadAction<string>) => {
+      state.categoryId = action.payload;
+    },
+    setColorCategory: (state, action: PayloadAction<TColors>) => {
+      console.log(action.payload);
+      state.color = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -84,8 +93,8 @@ const tasksSlice = createSlice({
     builder.addCase(addTaskAsync.fulfilled, (state, { payload }) => {
       state.meta.creating = false;
       state.tasks.push(payload);
-      state.input = "";
-      state.creationModalOpen = false;
+      state.inputTask = "";
+      state.creationModalOpenTask = false;
     });
     builder.addCase(addTaskAsync.rejected, (state, { payload }) => {
       state.meta.creating = false;
@@ -99,10 +108,10 @@ const tasksSlice = createSlice({
     builder.addCase(editTaskAsync.fulfilled, (state, { payload }) => {
       state.meta.updating = false;
       state.tasks = state.tasks.map((task) =>
-        task.id === payload.id ? payload : task
+        task.id === payload.id ? payload : task,
       );
-      state.input = "";
-      state.editModalOpen = false;
+      state.inputTask = "";
+      state.editModalOpenTask = false;
     });
     builder.addCase(editTaskAsync.rejected, (state, { payload }) => {
       state.meta.updating = false;
@@ -145,6 +154,7 @@ export const fetchTasks = createAsyncThunk<
 >("tasksReducer/fetchTasks", async (id, { rejectWithValue }) => {
   try {
     const { data } = await tasksApi.getTasks(id);
+    console.log(data);
     return data;
   } catch (e: any) {
     return rejectWithValue(e.message);
@@ -156,15 +166,16 @@ export const addTaskAsync = createAsyncThunk(
     const globalState = getState() as RootState;
     try {
       const task = {
-        categoryId: "3922308c-003c-420b-91f6-5d756b647283",
-        text: globalState.tasksReducer.input,
+        categoryId: globalState.tasksReducer.categoryId, // Преобразование в строку
+        text: globalState.tasksReducer.inputTask,
+        color: "green",
       };
       const { data } = await tasksApi.addTask(task);
       return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 export const deleteTaskAsync = createAsyncThunk(
   "tasksReducer/deleteTaskAsync",
@@ -175,7 +186,7 @@ export const deleteTaskAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const editTaskAsync = createAsyncThunk(
@@ -184,13 +195,13 @@ export const editTaskAsync = createAsyncThunk(
     try {
       await tasksApi.editTask(
         { text: task.text, color: "blue", isCompleted: task.isCompleted },
-        task.id
+        task.id,
       );
       return task;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const { actions: tasksActions, reducer: tasksReducer } = tasksSlice;

@@ -34,6 +34,8 @@ import {
   editCategoryAsync,
   fetchCategories,
 } from "./Categories.slice";
+
+import { tasksActions } from "../main/tasks/Tasks.slice";
 import { fetchFriends } from "../friends/Friends.slice";
 import { findUser } from "./categories.utils";
 import { useBoundActions } from "../../app/store";
@@ -41,6 +43,7 @@ import { useSnackbar } from "notistack";
 import { getUsers } from "../friends/friends.utils";
 import { TUser } from "../friends/Friends.types";
 import { useNavigate } from "react-router-dom";
+import login from "../authorization/Login";
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -60,6 +63,7 @@ const allActions = {
   fetchCategories,
 
   ...categoriesActions,
+  ...tasksActions,
 };
 
 const Categories = () => {
@@ -68,21 +72,22 @@ const Categories = () => {
 
   const input = useAppSelector((state) => state.categoriesReducer.input);
   const categories = useAppSelector(
-    (state) => state.categoriesReducer.categories
+    (state) => state.categoriesReducer.categories,
   );
   const members = useAppSelector((state) => state.categoriesReducer.members);
   const creationModalOpen = useAppSelector(
-    (state) => state.categoriesReducer.creationModalOpen
+    (state) => state.categoriesReducer.creationModalOpen,
   );
   const editModalOpen = useAppSelector(
-    (state) => state.categoriesReducer.editModalOpen
+    (state) => state.categoriesReducer.editModalOpen,
   );
   const message = useAppSelector((state) => state.categoriesReducer.message);
   const status = useAppSelector((state) => state.categoriesReducer.status);
   const color = useAppSelector((state) => state.categoriesReducer.color);
+  const colorTasks = useAppSelector((state) => state.tasksReducer.color);
   const users = useAppSelector((state) => state.friendsReducer.users);
   const authUser = useAppSelector(
-    (state) => state.authorizationReducer.authUser
+    (state) => state.authorizationReducer.authUser,
   );
 
   const [currentActive, setCurrentActive] = useState<TCategory | undefined>();
@@ -97,7 +102,7 @@ const Categories = () => {
       target: { value },
     } = event;
     boundActions.changeMembers(
-      typeof value === "string" ? value.split(",") : value
+      typeof value === "string" ? value.split(",") : value,
     );
   };
 
@@ -107,7 +112,7 @@ const Categories = () => {
 
   const handleClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    category: TCategory
+    category: TCategory,
   ) => {
     setAnchorEl(event.currentTarget);
     setCurrentActive(category);
@@ -130,6 +135,9 @@ const Categories = () => {
   const handleOpenCreationModal = () => {
     boundActions.openCreationModal();
   };
+  const handleSetCategoryId = (id: string) => {
+    boundActions.setCategoryId(id);
+  };
   const handleCloseCreationModal = () => {
     boundActions.closeCreationModal();
   };
@@ -148,7 +156,7 @@ const Categories = () => {
             }`
           : `${findUser(currentActive?.members as TUser[], userId)?.name} ${
               findUser(currentActive?.members as TUser[], userId)?.surname
-            }`
+            }`,
       )
       .join(", ");
   };
@@ -157,11 +165,15 @@ const Categories = () => {
     categories.filter((category) =>
       own
         ? category.creatorId === authUser?.id
-        : category.creatorId !== authUser?.id
+        : category.creatorId !== authUser?.id,
     );
   useEffect(() => {
-    boundActions.fetchCategories();
-  }, []);
+    authUser && boundActions.fetchCategories(authUser?.id);
+  }, [authUser]);
+  useEffect(() => {
+    console.log(categories);
+    console.log(authUser && authUser);
+  }, [authUser]);
   useEffect(() => {
     message &&
       enqueueSnackbar(message, {
@@ -328,7 +340,10 @@ const Categories = () => {
       >
         <MenuItem
           onClick={() => {
-            // currentActive && console.log(currentActive.id);
+            if (currentActive) {
+              handleSetCategoryId(currentActive.id);
+              boundActions.setColorCategory(currentActive.color);
+            }
             navigate("/tasks");
           }}
         >
@@ -400,6 +415,7 @@ const Categories = () => {
                     .map((category) => (
                       <Collapse key={category.id}>
                         <Category
+                          key={category.id}
                           name={category.name}
                           color={category.color}
                           onClick={(event) => handleClick(event, category)}
