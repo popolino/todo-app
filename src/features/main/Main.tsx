@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Tasks from "./tasks/Tasks";
 import CategoriesMain from "./categories-main/CategoriesMain";
 import { useAppSelector } from "../../app/hooks";
