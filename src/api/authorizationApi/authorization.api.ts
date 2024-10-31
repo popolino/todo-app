@@ -1,11 +1,9 @@
 import axios from "axios";
 import { TLoginFields } from "../../features/authorization/Login";
 import { TAuthResponse } from "../../features/authorization/Authorization.types";
-import { axiosInstance } from "../index";
+import { axiosInstance, BASE_URL } from "../index";
 import { TRegistrationFields } from "../../features/authorization/Registration";
 import { TUser } from "../../features/friends/Friends.types";
-
-const BASE_URL = "http://localhost:3002";
 
 interface LoginResponse {
   message: string;
@@ -29,16 +27,16 @@ interface LoginData {
 
 export const authorizationApi = {
   createUser: (formValues: TRegistrationFields) => {
-    return axiosInstance.post<TAuthResponse>("/registration", formValues);
+    return axiosInstance.post<TAuthResponse>("/auth/register", formValues);
   },
   loginUser: (formValues: TLoginFields) => {
-    return axiosInstance.post<TAuthResponse>("/login", formValues);
+    return axiosInstance.post<TAuthResponse>("/auth/login", formValues);
   },
   logoutUser: () => {
-    return axiosInstance.delete("/logout");
+    return axiosInstance.delete("/auth/logout");
   },
   authMe: () => {
-    return axiosInstance.get<TUser>("/authMe");
+    return axiosInstance.get<TUser>("auth/authMe");
   },
   refresh: () => {
     return axios.put<TAuthResponse>(`${BASE_URL}auth/refresh`, null, {
