@@ -16,6 +16,7 @@ import {
 } from "../../categories/Categories.slice";
 import { fetchTasks, tasksActions } from "../tasks/Tasks.slice";
 import { useAppSelector } from "../../../app/hooks";
+import login from "../../authorization/Login";
 type TCategory = {
   id: string;
   tasks: number;
@@ -48,8 +49,11 @@ const CategoriesMain = () => {
 
   useEffect(() => {
     authUser && boundActions.fetchCategories(authUser?.id);
+    authUser && console.log("check");
   }, [authUser]);
-
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
   return (
     <>
       <div className="container">
@@ -59,24 +63,23 @@ const CategoriesMain = () => {
       <div className={classes.gradient}>
         <div className={classes.categories} ref={scrollArea}>
           {categories
-            .slice() // создаем копию массива, чтобы не мутировать исходный массив
+            .slice()
             .sort(
               (a, b) =>
                 new Date(b.createdAt).getTime() -
                 new Date(a.createdAt).getTime(),
-            ) // сортировка по убыванию даты создания
+            )
             .map((category) => (
               <CategoryMain
-                setCategoryId={(id) => boundActions.setCategoryId(id)}
+                setCategory={(category) =>
+                  boundActions.setCurrentCategory(category)
+                }
                 setColor={(color) => boundActions.setColorCategory(color)}
                 getTasks={(id) => boundActions.fetchTasks(id)}
                 categories={categories}
                 key={category.id}
-                maximum={category.taskCount}
-                value={category.completedTaskCount}
-                color={category.color}
-                name={category.name}
-                id={category.id}
+                category={category}
+                authUser={authUser}
               />
             ))}
         </div>

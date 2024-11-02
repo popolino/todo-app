@@ -5,10 +5,10 @@ export type TTask = {
   color: TColors;
   text: string;
   isCompleted: boolean;
+  categoryId: string;
 };
 
 export interface ICreateTaskRequest extends Partial<TTask> {
-  color: TColors;
   text: string;
   isCompleted: boolean;
 }

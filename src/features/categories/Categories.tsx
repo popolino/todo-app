@@ -135,8 +135,8 @@ const Categories = () => {
   const handleOpenCreationModal = () => {
     boundActions.openCreationModal();
   };
-  const handleSetCategoryId = (id: string) => {
-    boundActions.setCategoryId(id);
+  const handleSetCategory = (category: TCategory) => {
+    boundActions.setCurrentCategory(category);
   };
   const handleCloseCreationModal = () => {
     boundActions.closeCreationModal();
@@ -341,7 +341,7 @@ const Categories = () => {
         <MenuItem
           onClick={() => {
             if (currentActive) {
-              handleSetCategoryId(currentActive.id);
+              handleSetCategory(currentActive);
               boundActions.setColorCategory(currentActive.color);
             }
             navigate("/tasks");

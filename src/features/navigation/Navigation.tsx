@@ -12,12 +12,14 @@ import {
   fetchLogout,
 } from "../authorization/Authorization.slice";
 import { routes } from "../../routes/routes";
+import { TUser } from "../friends/Friends.types";
 
 type TNavigationProps = {
   persistent: boolean;
   open: boolean;
   setOpen: (open: boolean) => void;
   onLogout: () => void;
+  authUser: TUser | null;
 };
 
 const Navigation: React.FC<TNavigationProps> = ({
@@ -25,6 +27,7 @@ const Navigation: React.FC<TNavigationProps> = ({
   open,
   setOpen,
   onLogout,
+  authUser,
 }) => {
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -56,8 +59,8 @@ const Navigation: React.FC<TNavigationProps> = ({
         </IconButton>
       </div>
       <div className={classes.username}>
-        <p>Joy</p>
-        <p>Mitchell</p>
+        <p>{authUser?.name}</p>
+        <p>{authUser?.surname}</p>
       </div>
       <div className={classes.container}>
         <div className={classes.chapters}>

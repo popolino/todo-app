@@ -15,6 +15,7 @@ import {
 import { RootState } from "../../app/store.types";
 import categories from "./Categories";
 import login from "../authorization/Login";
+import category from "./category/Category";
 
 const initialColor = colors[0].name;
 export interface ICategoriesState {
@@ -63,6 +64,48 @@ const categoriesSlice = createSlice({
     },
     changeMembers: (state, action: PayloadAction<string[]>) => {
       state.members = action.payload;
+    },
+    incrementTasks: (state, action: PayloadAction<string>) => {
+      const category = state.categories.find(
+        (category) => category.id === action.payload,
+      );
+      if (category) {
+        category.taskCount += 1;
+      }
+    },
+    incrementCompletedTasks: (state, action: PayloadAction<string>) => {
+      const category = state.categories.find(
+        (category) => category.id === action.payload,
+      );
+      console.log(action.payload);
+      if (category) {
+        category.completedTaskCount += 1;
+      }
+    },
+    decrementCompletedTasks: (state, action: PayloadAction<string>) => {
+      const category = state.categories.find(
+        (category) => category.id === action.payload,
+      );
+      if (category && category.completedTaskCount > 0) {
+        category.completedTaskCount -= 1;
+      }
+    },
+    decrementTasks: (state, action: PayloadAction<string>) => {
+      const category = state.categories.find(
+        (category) => category.id === action.payload,
+      );
+      if (category) {
+        category.taskCount -= 1;
+      }
+    },
+    decrementSomeTasks: (state, action: PayloadAction<[string, number]>) => {
+      const [categoryId, count] = action.payload;
+      const category = state.categories.find(
+        (category) => category.id === categoryId,
+      );
+      if (category) {
+        category.taskCount -= count;
+      }
     },
     closeCreationModal: (state) => {
       state.creationModalOpen = false;

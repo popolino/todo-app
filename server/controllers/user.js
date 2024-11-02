@@ -26,7 +26,6 @@ const registration = async (req, res) => {
       password: hashedPassword,
     });
     const token = generateToken(newUser);
-    console.log("toooooooooken: ", token);
     res.status(201).json({
       message: "Пользователь успешно создан",
       user: newUser,
@@ -61,7 +60,7 @@ const login = async (req, res) => {
 };
 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1]; // Предполагаем, что токен передается в формате 'Bearer <token>'
+  const token = req.headers.authorization?.split(" ")[1];
   if (!token) {
     return res
       .status(401)
@@ -77,12 +76,10 @@ const authenticateToken = (req, res, next) => {
 };
 
 const generateToken = (user) => {
-  console.log("Генерация токена для пользователя:", user); // Отладочный вывод
-  return jwt.sign(
-    { id: user.id, email: user.email }, // Данные пользователя для токена
-    "your_jwt_secret_key",
-    { expiresIn: "1h" },
-  );
+  console.log("Генерация токена для пользователя:", user);
+  return jwt.sign({ id: user.id, email: user.email }, "your_jwt_secret_key", {
+    expiresIn: "1h",
+  });
 };
 
 const authMe = async (req, res) => {

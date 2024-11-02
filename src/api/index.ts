@@ -2,14 +2,14 @@ import axios, { InternalAxiosRequestConfig } from "axios";
 // import { authorizationApi } from "./authorizationApi/authorization.api";
 //
 //
-export const BASE_URL = "http://192.168.103.116:3002/api/v1/";
+export const BASE_URL = "http://localhost:3002";
 export const axiosInstance = axios.create({
   baseURL: BASE_URL,
   withCredentials: true,
 });
 axiosInstance.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("token");
-  config.headers.set("Authorization", `Bearer_${token}`);
+  config.headers.set("Authorization", `Bearer ${token}`);
   return config;
 });
 

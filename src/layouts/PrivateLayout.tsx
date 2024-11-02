@@ -18,7 +18,9 @@ const allActions = {
 const PrivateLayout = () => {
   const boundActions = useBoundActions(allActions);
 
-  const isAuth = useAppSelector((state) => state.authorizationReducer.isAuth);
+  const authUser = useAppSelector(
+    (state) => state.authorizationReducer.authUser,
+  );
 
   const [isMobile, setMobile] = useState(window.innerWidth <= 500);
   const [open, setOpen] = useState(false);
@@ -38,6 +40,7 @@ const PrivateLayout = () => {
         open={open}
         setOpen={setOpen}
         onLogout={onLogout}
+        authUser={authUser}
       />
       <div className="wrapper">
         <Header onOpen={() => setOpen(true)} />

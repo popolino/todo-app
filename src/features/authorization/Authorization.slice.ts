@@ -78,8 +78,8 @@ const authorizationSlice = createSlice({
       state.meta.creating = true;
     });
     builder.addCase(fetchLogin.fulfilled, (state, action) => {
-      // state.registrationData = action.payload;
       state.meta.creating = false;
+      state.authUser = action.payload.user;
     });
     builder.addCase(fetchLogin.rejected, (state) => {
       state.meta.creating = false;

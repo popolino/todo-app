@@ -1,4 +1,3 @@
-import axios from "axios";
 import { TLoginFields } from "../../features/authorization/Login";
 import { TAuthResponse } from "../../features/authorization/Authorization.types";
 import { axiosInstance, BASE_URL } from "../index";
@@ -36,33 +35,13 @@ export const authorizationApi = {
     return axiosInstance.delete("/auth/logout");
   },
   authMe: () => {
-    return axiosInstance.get<TUser>("auth/authMe");
+    return axiosInstance.get<TUser>("/auth/authMe");
   },
-  refresh: () => {
-    return axios.put<TAuthResponse>(`${BASE_URL}auth/refresh`, null, {
-      withCredentials: true,
-    });
-  },
-};
-
-export const loginUser = async (
-  loginData: LoginData,
-): Promise<LoginResponse | null> => {
-  try {
-    const response = await axios.post<LoginResponse>(
-      `${BASE_URL}/login`,
-      loginData,
-    );
-    console.log("Успешный вход:", response.data);
-    return response.data;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("Ошибка при входе:", error.response?.data || error.message);
-    } else {
-      console.error("Непредвиденная ошибка:", error);
-    }
-    return null;
-  }
+  // refresh: () => {
+  //   return axios.put<TAuthResponse>(`${BASE_URL}auth/refresh`, null, {
+  //     withCredentials: true,
+  //   });
+  // },
 };
 
 // import { axiosInstance, BASE_URL } from "../index";

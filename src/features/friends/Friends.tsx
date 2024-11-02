@@ -10,22 +10,21 @@ import {
   acceptFriendAsync,
   addFriendAsync,
   deleteFriendAsync,
-  fetchAllUsersAsync,
   fetchFriends,
   friendsActions,
+  fetchRelationsAsync,
 } from "./Friends.slice";
 import Pending from "./pending/Pending";
 import Outgoing from "./outgoing/Outgoing";
 import { useSnackbar } from "notistack";
 import { TransitionGroup } from "react-transition-group";
 import Collapse from "@mui/material/Collapse";
-import { getUsers } from "./friends.utils";
 const allActions = {
   deleteFriendAsync,
   acceptFriendAsync,
   fetchFriends,
-  fetchAllUsersAsync,
   addFriendAsync,
+  fetchRelationsAsync,
   ...friendsActions,
 };
 
@@ -33,8 +32,10 @@ const Friends = () => {
   const boundActions = useBoundActions(allActions);
   const { enqueueSnackbar } = useSnackbar();
 
-  const users = useAppSelector((state) => state.friendsReducer.users);
-  const allUsers = useAppSelector((state) => state.friendsReducer.allUsers);
+  const friends = useAppSelector((state) => state.friendsReducer.friends);
+  const pending = useAppSelector((state) => state.friendsReducer.pending);
+  const outgoing = useAppSelector((state) => state.friendsReducer.outgoing);
+  // const allUsers = useAppSelector((state) => state.friendsReducer.allUsers);
   const message = useAppSelector((state) => state.friendsReducer.message);
   const status = useAppSelector((state) => state.friendsReducer.status);
 
@@ -46,9 +47,13 @@ const Friends = () => {
     await boundActions.addFriendAsync(email).unwrap();
     setSearchInput("");
   };
+  // useEffect(() => {
+  //   boundActions.fetchFriends();
+  //   boundActions.fetchAllUsersAsync();
+  // }, []);
+
   useEffect(() => {
-    boundActions.fetchFriends();
-    boundActions.fetchAllUsersAsync();
+    boundActions.fetchRelationsAsync();
   }, []);
   useEffect(() => {
     message &&
@@ -79,57 +84,57 @@ const Friends = () => {
         </div>
         <div className="title">PENDING</div>
         <TransitionGroup>
-          {getUsers(users, "pending").length > 0 ? (
-            getUsers(users, "pending").map((pending) => (
-              <Collapse key={pending.id}>
+          {pending.map((user) =>
+            pending.length > 0 ? (
+              <Collapse key={user.id}>
                 <Pending
-                  name={`${pending.name} ${pending.surname}`}
-                  picture={pending.picture}
-                  onAcceptFriend={() => acceptFriend(pending.id)}
-                  onDelete={() => handleDelete(pending.id)}
+                  name={`${user.name} ${user.surname}`}
+                  picture={user.picture}
+                  onAcceptFriend={() => acceptFriend(user.id)}
+                  onDelete={() => handleDelete(user.id)}
                 />
               </Collapse>
-            ))
-          ) : (
-            <Collapse>
-              <div>no data</div>
-            </Collapse>
+            ) : (
+              <Collapse>
+                <div>no data</div>
+              </Collapse>
+            ),
           )}
         </TransitionGroup>
         <div className="title">OUTGOING</div>
         <TransitionGroup>
-          {getUsers(users, "outgoing").length > 0 ? (
-            getUsers(users, "outgoing").map((outgoing) => (
-              <Collapse key={outgoing.id}>
+          {outgoing.map((user) =>
+            outgoing.length > 0 ? (
+              <Collapse key={user.id}>
                 <Outgoing
-                  name={`${outgoing.name} ${outgoing.surname}`}
-                  picture={outgoing.picture}
-                  onClick={() => handleDelete(outgoing.id)}
+                  name={`${user.name} ${user.surname}`}
+                  picture={user.picture}
+                  onClick={() => handleDelete(user.id)}
                 />
               </Collapse>
-            ))
-          ) : (
-            <Collapse>
-              <div>no data</div>
-            </Collapse>
+            ) : (
+              <Collapse>
+                <div>no data</div>
+              </Collapse>
+            ),
           )}
         </TransitionGroup>
         <div className="title">FRIENDS</div>
         <TransitionGroup>
-          {getUsers(users, "friends").length > 0 ? (
-            getUsers(users, "friends").map((friend) => (
-              <Collapse key={friend.id}>
+          {friends.map((user) =>
+            friends.length > 0 ? (
+              <Collapse key={user.id}>
                 <Friend
-                  name={`${friend.name} ${friend.surname}`}
-                  picture={friend.picture}
-                  onClick={() => handleDelete(friend.id)}
+                  name={`${user.name} ${user.surname}`}
+                  picture={user.picture}
+                  onClick={() => handleDelete(user.id)}
                 />
               </Collapse>
-            ))
-          ) : (
-            <Collapse>
-              <div>no data</div>
-            </Collapse>
+            ) : (
+              <Collapse>
+                <div>no data</div>
+              </Collapse>
+            ),
           )}
         </TransitionGroup>
       </div>

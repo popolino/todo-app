@@ -19,7 +19,17 @@ const {
   createCategory,
 } = require("./controllers/categories");
 
-const { getAllTasks, createTask } = require("./controllers/tasks");
+const {
+  getAllTasks,
+  createTask,
+  editTask,
+  deleteTask,
+  deleteTasksByIds,
+} = require("./controllers/tasks");
+const {
+  sendFriendRequest,
+  fetchRelationsAsync,
+} = require("./controllers/friends");
 
 const sequelize = new Sequelize(
   config.development.database,
@@ -53,17 +63,23 @@ User.init(
   { sequelize, modelName: "User" },
 );
 
-app.get("/users", getUsers);
-app.post("/registration", registration);
-app.post("/login", login);
-app.get("/authMe", authenticateToken, authMe);
-app.delete("/logout", logout);
+app.post("/auth/register", registration);
+app.post("/auth/login", login);
+app.get("/auth/authMe", authenticateToken, authMe);
+app.delete("/auth/logout", logout);
 
 app.get("/categories/", getAllCategories);
 app.post("/categories", authenticateToken, createCategory);
 
 app.get("/categories/:categoryId/tasks", getAllTasks);
 app.post("/tasks", createTask);
+app.put("/tasks/:id", editTask);
+app.delete("/tasks/:id", deleteTask);
+app.delete("/tasks", deleteTasksByIds);
+
+app.get("/users", getUsers);
+app.get("/users/relations", authenticateToken, fetchRelationsAsync);
+app.post("/users/relations/:email", authenticateToken, sendFriendRequest);
 
 app.listen(PORT, async () => {
   try {

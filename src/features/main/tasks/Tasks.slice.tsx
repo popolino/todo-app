@@ -8,13 +8,14 @@ import {
   isRejectedAction,
 } from "src/utils";
 import { RootState } from "src/app/store.types";
+import { TCategory } from "../../categories/Categories.types";
 
 const initialColor = colors[0].name;
 export interface ITasksState {
   tasks: TTask[];
   inputTask: string;
   color: TColors;
-  categoryId: string;
+  currentCategory: TCategory | null;
   creationModalOpenTask: boolean;
   editModalOpenTask: boolean;
   status: "idle" | "loading" | "failed";
@@ -30,7 +31,7 @@ export const initialState: ITasksState = {
   tasks: [],
   inputTask: "",
   color: initialColor,
-  categoryId: "",
+  currentCategory: null,
   status: "idle",
   creationModalOpenTask: false,
   editModalOpenTask: false,
@@ -64,8 +65,8 @@ const tasksSlice = createSlice({
     closeEditModal: (state) => {
       state.editModalOpenTask = false;
     },
-    setCategoryId: (state, action: PayloadAction<string>) => {
-      state.categoryId = action.payload;
+    setCurrentCategory: (state, action: PayloadAction<TCategory>) => {
+      state.currentCategory = action.payload;
     },
     setColorCategory: (state, action: PayloadAction<TColors>) => {
       console.log(action.payload);
@@ -92,7 +93,7 @@ const tasksSlice = createSlice({
     });
     builder.addCase(addTaskAsync.fulfilled, (state, { payload }) => {
       state.meta.creating = false;
-      state.tasks.push(payload);
+      payload && state.tasks.push(payload);
       state.inputTask = "";
       state.creationModalOpenTask = false;
     });
@@ -133,6 +134,17 @@ const tasksSlice = createSlice({
       state.meta.deleting = false;
     });
 
+    builder.addCase(deleteTasksByIdsAsync.pending, (state) => {
+      state.meta.deleting = true;
+    });
+    builder.addCase(deleteTasksByIdsAsync.fulfilled, (state, { payload }) => {
+      state.meta.deleting = false;
+      state.tasks = state.tasks.filter((task) => !payload.includes(task.id));
+    });
+    builder.addCase(deleteTasksByIdsAsync.rejected, (state, { payload }) => {
+      state.meta.deleting = false;
+    });
+
     builder.addMatcher(isPendingAction, (state) => {
       state.status = "loading";
       state.message = "";
@@ -154,7 +166,6 @@ export const fetchTasks = createAsyncThunk<
 >("tasksReducer/fetchTasks", async (id, { rejectWithValue }) => {
   try {
     const { data } = await tasksApi.getTasks(id);
-    console.log(data);
     return data;
   } catch (e: any) {
     return rejectWithValue(e.message);
@@ -165,13 +176,15 @@ export const addTaskAsync = createAsyncThunk(
   async (_, { rejectWithValue, getState }) => {
     const globalState = getState() as RootState;
     try {
-      const task = {
-        categoryId: globalState.tasksReducer.categoryId, // Преобразование в строку
-        text: globalState.tasksReducer.inputTask,
-        color: "green",
-      };
-      const { data } = await tasksApi.addTask(task);
-      return data;
+      if (globalState.tasksReducer.currentCategory) {
+        const task = {
+          categoryId: globalState.tasksReducer.currentCategory.id, // Преобразование в строку
+          text: globalState.tasksReducer.inputTask,
+          color: "green",
+        };
+        const { data } = await tasksApi.addTask(task);
+        return data;
+      } else return null;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
@@ -189,12 +202,24 @@ export const deleteTaskAsync = createAsyncThunk(
   },
 );
 
+export const deleteTasksByIdsAsync = createAsyncThunk(
+  "tasksReducer/deleteTasksAsync",
+  async (ids: string[], { rejectWithValue }) => {
+    try {
+      await tasksApi.deleteTasks(ids); // Передаём массив id
+      return ids;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  },
+);
+
 export const editTaskAsync = createAsyncThunk(
   "tasksReducer/editTaskAsync",
   async (task: TTask, { rejectWithValue }) => {
     try {
       await tasksApi.editTask(
-        { text: task.text, color: "blue", isCompleted: task.isCompleted },
+        { text: task.text, isCompleted: task.isCompleted },
         task.id,
       );
       return task;

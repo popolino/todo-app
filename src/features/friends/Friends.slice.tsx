@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { friendsApi } from "../../api/friendsApi/friends.api";
-import { TUser } from "./Friends.types";
+import { TUser, TUserRelations } from "./Friends.types";
 import {
   isFulfilledAction,
   isPendingAction,
@@ -12,7 +12,9 @@ import { tasksApi } from "../../api/tasksApi/tasks.api";
 
 export interface IFriendsState {
   users: TUser[];
-  allUsers: TUser[];
+  friends: TUser[];
+  pending: TUser[];
+  outgoing: TUser[];
   status: "idle" | "loading" | "failed";
   message: any;
   meta: {
@@ -24,7 +26,9 @@ export interface IFriendsState {
 }
 export const initialState: IFriendsState = {
   users: [],
-  allUsers: [],
+  friends: [],
+  pending: [],
+  outgoing: [],
   status: "idle",
   message: "",
   meta: {
@@ -39,20 +43,23 @@ const friendsSlice = createSlice({
   name: "friendsReducer",
   initialState,
   reducers: {
-    setAllUsers: (state, action) => {
-      state.allUsers = action.payload;
-    },
+    // setAllUsers: (state, action) => {
+    //   state.allUsers = action.payload;
+    // },
   },
   extraReducers: (builder) => {
     // FETCH
-    builder.addCase(fetchFriends.pending, (state) => {
+    builder.addCase(fetchRelationsAsync.pending, (state) => {
       state.meta.fetching = true;
     });
-    builder.addCase(fetchFriends.fulfilled, (state, { payload }) => {
-      state.users = payload;
+    builder.addCase(fetchRelationsAsync.fulfilled, (state, { payload }) => {
+      state.friends = payload.friends;
+      state.pending = payload.pending;
+      state.outgoing = payload.outgoing;
+      console.log(payload);
       state.meta.fetching = false;
     });
-    builder.addCase(fetchFriends.rejected, (state, { payload }) => {
+    builder.addCase(fetchRelationsAsync.rejected, (state, { payload }) => {
       state.meta.fetching = false;
     });
 
@@ -82,7 +89,7 @@ const friendsSlice = createSlice({
       const user = state.users.find((user) => payload === user.id);
       state.users.map(
         (user) =>
-          user.id === payload && [...state.users, (user.status = "friends")]
+          user.id === payload && [...state.users, (user.status = "friends")],
       );
       if (!user) return;
       state.message = `User with name "${user.name}" add`;
@@ -119,6 +126,20 @@ const friendsSlice = createSlice({
     });
   },
 });
+
+export const fetchRelationsAsync = createAsyncThunk<
+  TUserRelations,
+  void,
+  { rejectValue: string }
+>("friendsReducer/fetchRelationsAsync", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await friendsApi.fetchRelationsAsync();
+    return data;
+  } catch (e: any) {
+    return rejectWithValue(e.message);
+  }
+});
+
 export const fetchFriends = createAsyncThunk<
   TUser[],
   void,
@@ -141,7 +162,7 @@ export const addFriendAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const acceptFriendAsync = createAsyncThunk(
@@ -153,7 +174,7 @@ export const acceptFriendAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
 
 export const deleteFriendAsync = createAsyncThunk(
@@ -165,24 +186,24 @@ export const deleteFriendAsync = createAsyncThunk(
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
-  }
+  },
 );
-export const fetchAllUsersAsync = createAsyncThunk<
-  TUser[],
-  void,
-  { rejectValue: string }
->(
-  "friendsReducer/fetchAllUsersAsync",
-  async (_, { rejectWithValue, dispatch }) => {
-    try {
-      const { data } = await friendsApi.getAllUsers();
-      dispatch(friendsActions.setAllUsers(data));
-      return data;
-    } catch (e: any) {
-      return rejectWithValue(e.message);
-    }
-  }
-);
+// export const fetchAllUsersAsync = createAsyncThunk<
+//   TUser[],
+//   void,
+//   { rejectValue: string }
+// >(
+//   "friendsReducer/fetchAllUsersAsync",
+//   async (_, { rejectWithValue, dispatch }) => {
+//     try {
+//       const { data } = await friendsApi.getAllUsers();
+//       dispatch(friendsActions.setAllUsers(data));
+//       return data;
+//     } catch (e: any) {
+//       return rejectWithValue(e.message);
+//     }
+//   },
+// );
 
 export const { actions: friendsActions, reducer: friendsReducer } =
   friendsSlice;

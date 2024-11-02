@@ -18,6 +18,7 @@ import { useAppSelector } from "src/app/hooks";
 import {
   addTaskAsync,
   deleteTaskAsync,
+  deleteTasksByIdsAsync,
   editTaskAsync,
   fetchTasks,
   tasksActions,
@@ -26,13 +27,16 @@ import { TTask } from "./Tasks.types";
 import { useBoundActions } from "../../../app/store";
 import { useSnackbar } from "notistack";
 import category from "../../categories/category/Category";
+import { categoriesActions } from "../../categories/Categories.slice";
 
 const allActions = {
   addTaskAsync,
   deleteTaskAsync,
   editTaskAsync,
   fetchTasks,
+  deleteTasksByIdsAsync,
   ...tasksActions,
+  ...categoriesActions,
 };
 
 export type TCoordinates = {
@@ -59,7 +63,9 @@ const Tasks: React.FC<TTasksProps> = () => {
   const message = useAppSelector((state) => state.tasksReducer.message);
   const status = useAppSelector((state) => state.tasksReducer.status);
   const color = useAppSelector((state) => state.tasksReducer.color);
-  const categoryId = useAppSelector((state) => state.tasksReducer.categoryId);
+  const currentCategory = useAppSelector(
+    (state) => state.tasksReducer.currentCategory,
+  );
   const authUser = useAppSelector(
     (state) => state.authorizationReducer.authUser,
   );
@@ -77,9 +83,22 @@ const Tasks: React.FC<TTasksProps> = () => {
   const handleCloseEditModal = () => boundActions.closeEditModal();
   const handleOpenEditModal = () =>
     currentActive && boundActions.openEditModalTask(currentActive?.text);
-  const handleCreateTask = () => boundActions.addTaskAsync();
-  const handleDelete = () =>
-    currentActive && boundActions.deleteTaskAsync(currentActive.id);
+  const handleCreateTask = async () => {
+    await boundActions.addTaskAsync();
+    if (currentCategory) {
+      console.log(currentCategory.id);
+      boundActions.incrementTasks(currentCategory.id);
+      console.log(currentCategory.id);
+      boundActions.setCurrentCategory(currentCategory);
+    }
+  };
+  const handleDelete = () => {
+    if (currentActive) {
+      boundActions.decrementTasks(currentActive.categoryId);
+      console.log(currentActive);
+      boundActions.deleteTaskAsync(currentActive.id);
+    }
+  };
   const handleSelect = (currentId: string | undefined) => {
     if (!currentId) return;
     if (selected.includes(currentId))
@@ -87,8 +106,21 @@ const Tasks: React.FC<TTasksProps> = () => {
     else setSelected([...selected, currentId]);
   };
   const handleContextClose = () => setContextMenu(null);
-  const handleCompleted = (task: TTask) =>
-    boundActions.editTaskAsync({ ...task, isCompleted: !task?.isCompleted });
+
+  const handleCompleted = (task: TTask) => {
+    const isTaskBecomingCompleted = !task?.isCompleted;
+    boundActions.editTaskAsync({
+      ...task,
+      isCompleted: isTaskBecomingCompleted,
+    });
+    if (currentCategory) {
+      if (isTaskBecomingCompleted && currentCategory) {
+        boundActions.incrementCompletedTasks(currentCategory.id);
+      } else {
+        boundActions.decrementCompletedTasks(currentCategory.id);
+      }
+    }
+  };
   const handleEditTask = () =>
     currentActive &&
     boundActions.editTaskAsync({ ...currentActive, text: input });
@@ -98,9 +130,11 @@ const Tasks: React.FC<TTasksProps> = () => {
     setContextMenu({ mouseX: event.clientX, mouseY: event.clientY });
     setCurrentActive(task);
   };
-  const handleDeleteAll = () => {
+  const handleDeleteSome = () => {
+    boundActions.deleteTasksByIdsAsync(selected);
+    currentCategory &&
+      boundActions.decrementSomeTasks([currentCategory.id, selected.length]);
     setSelected([]);
-    // setTasks([...tasks.filter((task) => !selected.includes(task.id))]);
   };
   useEffect(() => {
     message &&
@@ -108,25 +142,30 @@ const Tasks: React.FC<TTasksProps> = () => {
         variant: status !== "failed" ? "info" : "error",
       });
   }, [message]);
+
+  useEffect(() => {
+    currentCategory && boundActions.fetchTasks(currentCategory.id);
+  }, [currentCategory]);
   return (
     <>
       <CustomModal
         open={taskDeletionOpen}
         onClose={() => setTaskDeletionOpen(false)}
         onConfirm={() => {
-          handleDeleteAll();
+          console.log(selected);
+          handleDeleteSome();
           setTaskDeletionOpen(false);
         }}
       >
         <>
           <p>Are you sure you want to delete selected tasks?</p>
           <div className={clsx("checkbox-small", classes.checkbox)}>
-            <FormGroup>
-              <FormControlLabel
-                control={<Checkbox />}
-                label="Don’t show this message again"
-              />
-            </FormGroup>
+            {/*<FormGroup>*/}
+            {/*  <FormControlLabel*/}
+            {/*    control={<Checkbox />}*/}
+            {/*    label="Don’t show this message again"*/}
+            {/*  />*/}
+            {/*</FormGroup>*/}
           </div>
         </>
       </CustomModal>
@@ -200,7 +239,7 @@ const Tasks: React.FC<TTasksProps> = () => {
       <div className={clsx("container", classes.tasks)}>
         <div className={clsx(classes.avatar, "title")}>
           {selected.length === 0
-            ? "PERSONAL"
+            ? `${currentCategory?.name}`
             : "SELECTED - " + `${selected.length}`}
         </div>
         <div className={classes.list}>

@@ -1,3 +1,5 @@
+import { TUser } from "../friends/Friends.types";
+
 export type TCreateUserDto = {
   email: string;
   name: string;
@@ -11,6 +13,7 @@ export type TLoginUserDto = {
 };
 export type TAuthResponse = {
   token: string;
+  user: TUser;
   // email: string;
   // password: string;
 };
