@@ -6,7 +6,7 @@ import { TColors } from "../../../consts/colors";
 import { useHorizontalScroll } from "src/hooks";
 import { useBoundActions } from "../../../app/store";
 import { useSnackbar } from "notistack";
-import { fetchFriends } from "../../friends/Friends.slice";
+// import { fetchFriends } from "../../friends/Friends.slice";
 import {
   addCategoryAsync,
   categoriesActions,
@@ -26,7 +26,7 @@ type TCategory = {
 };
 
 const allActions = {
-  fetchFriends,
+  // fetchFriends,
   addCategoryAsync,
   deleteCategoryAsync,
   editCategoryAsync,

@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import { BoundActions } from "./store.types";
 import { categoriesReducer } from "src/features/categories/Categories.slice";
 import { authorizationReducer } from "src/features/authorization/Authorization.slice";
+import { settingsReducer } from "../features/settings/Settings.slice";
 
 export const store = configureStore({
   reducer: {
@@ -14,11 +15,12 @@ export const store = configureStore({
     tasksReducer,
     friendsReducer,
     authorizationReducer,
+    settingsReducer,
   },
 });
 
 export const useBoundActions = <Actions extends ActionCreatorsMapObject>(
-  actions: Actions
+  actions: Actions,
 ): BoundActions<Actions> => {
   const dispatch = useAppDispatch();
 

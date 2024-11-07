@@ -10,17 +10,68 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./Settings.module.scss";
 import SvgSelector from "../../components/svgSelector/SvgSelector";
 import clsx from "clsx";
-
+import { useBoundActions } from "../../app/store";
+import { useSnackbar } from "notistack";
+import { useAppSelector } from "../../app/hooks";
+import {} from "../friends/Friends.slice";
+import { settingsActions } from "./Settings.slice";
+import { TUser } from "../friends/Friends.types";
+const allActions = {
+  ...settingsActions,
+};
 const Settings = () => {
   const [age, setAge] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value as string);
   };
+
+  const boundActions = useBoundActions(allActions);
+  const { enqueueSnackbar } = useSnackbar();
+
+  const status = useAppSelector((state) => state.friendsReducer.status);
+  const authUser = useAppSelector(
+    (state) => state.authorizationReducer.authUser,
+  );
+  const [name, setName] = useState<string>("");
+  const [surname, setSurname] = useState<string>("");
+  const [picture, setPicture] = useState<string>("");
+
+  useEffect(() => {
+    console.log(authUser);
+    if (authUser) {
+      setName(authUser.name);
+      setSurname(authUser.surname);
+      authUser.picture && setPicture(authUser.picture);
+    }
+  }, [authUser]);
+  useEffect(() => {
+    return () => {
+      URL.revokeObjectURL(picture);
+    };
+  }, [picture]);
+  useEffect(() => {
+    console.log(picture);
+  }, [picture]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setPicture(reader.result as string);
+        }
+      };
+
+      reader.readAsDataURL(file);
+    }
+  };
+
   return (
     <div className="main-container">
       <div className="container">
@@ -28,14 +79,28 @@ const Settings = () => {
         <div className="title">ACCOUNT</div>
         <div className={classes["account-form"]}>
           <div className={classes.circle}>
-            <SvgSelector id="photo" className={classes.photo} />
+            {picture ? (
+              <img src={picture} alt="Avatar" />
+            ) : (
+              <SvgSelector id="photo" className={classes.photo} />
+            )}
+
+            <input type="file" accept="image/*" onChange={handleFileChange} />
           </div>
           <div className={classes.forms}>
             <div className={clsx(classes.form, "input")}>
-              <TextField label="Name" />
+              <TextField
+                label="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div className={clsx(classes.form, "input")}>
-              <TextField label="Surname" />
+              <TextField
+                label="Surname"
+                value={surname}
+                onChange={(e) => setSurname(e.target.value)}
+              />
             </div>
             <div className={clsx(classes.form, "input")}>
               <FormControl>

@@ -7,8 +7,6 @@ import {
   isPendingAction,
   isRejectedAction,
 } from "../../utils";
-import { RootState } from "../../app/store.types";
-import { tasksApi } from "../../api/tasksApi/tasks.api";
 
 export interface IFriendsState {
   users: TUser[];
@@ -70,10 +68,11 @@ const friendsSlice = createSlice({
     });
     builder.addCase(deleteFriendAsync.fulfilled, (state, { payload }) => {
       state.meta.deleting = false;
-      const user = state.users.find((user) => payload === user.id);
-      state.users = state.users.filter((user) => user.id !== payload);
-      if (!user) return;
-      state.message = `Task with name "${user.name}" deleted`;
+      state.friends = state.friends.filter(
+        (friend) => friend.id !== payload.id,
+      );
+      state.pending.push(payload);
+      state.message = `Friend with name "${payload.name}" deleted`;
     });
     builder.addCase(deleteFriendAsync.rejected, (state, { payload }) => {
       state.meta.deleting = false;
@@ -86,13 +85,9 @@ const friendsSlice = createSlice({
     });
     builder.addCase(acceptFriendAsync.fulfilled, (state, { payload }) => {
       state.meta.updating = false;
-      const user = state.users.find((user) => payload === user.id);
-      state.users.map(
-        (user) =>
-          user.id === payload && [...state.users, (user.status = "friends")],
-      );
-      if (!user) return;
-      state.message = `User with name "${user.name}" add`;
+      state.friends.push(payload);
+      state.pending = state.pending.filter((user) => user.id !== payload.id);
+      state.message = `User with name "${payload.name}" add`;
     });
     builder.addCase(acceptFriendAsync.rejected, (state, { payload }) => {
       state.meta.updating = false;
@@ -105,10 +100,24 @@ const friendsSlice = createSlice({
     });
     builder.addCase(addFriendAsync.fulfilled, (state, { payload }) => {
       state.meta.updating = false;
-      state.users.push(payload);
+      state.outgoing.push(payload);
       state.message = `User with name "${payload.name}" add`;
     });
     builder.addCase(addFriendAsync.rejected, (state, { payload }) => {
+      state.meta.updating = false;
+    });
+
+    // CANCEL
+
+    builder.addCase(cancelInRequestAsync.pending, (state) => {
+      state.meta.updating = true;
+    });
+    builder.addCase(cancelInRequestAsync.fulfilled, (state, { payload }) => {
+      state.meta.updating = false;
+      state.pending = state.pending.filter((user) => user.id !== payload.id);
+      state.message = `User's request with name "${payload.name}" cancel`;
+    });
+    builder.addCase(cancelInRequestAsync.rejected, (state, { payload }) => {
       state.meta.updating = false;
     });
 
@@ -140,18 +149,18 @@ export const fetchRelationsAsync = createAsyncThunk<
   }
 });
 
-export const fetchFriends = createAsyncThunk<
-  TUser[],
-  void,
-  { rejectValue: string }
->("friendsReducer/fetchFriends", async (_, { rejectWithValue }) => {
-  try {
-    const { data } = await friendsApi.getFriends();
-    return data;
-  } catch (e: any) {
-    return rejectWithValue(e.message);
-  }
-});
+// export const fetchFriends = createAsyncThunk<
+//   TUser[],
+//   void,
+//   { rejectValue: string }
+// >("friendsReducer/fetchFriends", async (_, { rejectWithValue }) => {
+//   try {
+//     const { data } = await friendsApi.getFriends();
+//     return data;
+//   } catch (e: any) {
+//     return rejectWithValue(e.message);
+//   }
+// });
 
 export const addFriendAsync = createAsyncThunk(
   "friendsReducer/addFriendAsync",
@@ -167,10 +176,10 @@ export const addFriendAsync = createAsyncThunk(
 
 export const acceptFriendAsync = createAsyncThunk(
   "friendsReducer/acceptFriendAsync",
-  async (id: string, { rejectWithValue }) => {
+  async (email: string, { rejectWithValue }) => {
     try {
-      await friendsApi.acceptFriend(id);
-      return id;
+      const { data } = await friendsApi.acceptFriend(email);
+      return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }
@@ -179,10 +188,33 @@ export const acceptFriendAsync = createAsyncThunk(
 
 export const deleteFriendAsync = createAsyncThunk(
   "friendsReducer/deleteFriendAsync",
-  async (id: string, { rejectWithValue }) => {
+  async (email: string, { rejectWithValue }) => {
     try {
-      await friendsApi.deleteFriend(id);
-      return id;
+      const { data } = await friendsApi.deleteFriend(email);
+      return data;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  },
+);
+
+export const cancelRequestAsync = createAsyncThunk(
+  "friendsReducer/cancelRequestAsync",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const { data } = await friendsApi.cancelRequest(email);
+      return data;
+    } catch (e: any) {
+      return rejectWithValue(e.message);
+    }
+  },
+);
+export const cancelInRequestAsync = createAsyncThunk(
+  "friendsReducer/cancelInRequestAsync",
+  async (email: string, { rejectWithValue }) => {
+    try {
+      const { data } = await friendsApi.cancelInRequest(email);
+      return data;
     } catch (e: any) {
       return rejectWithValue(e.message);
     }

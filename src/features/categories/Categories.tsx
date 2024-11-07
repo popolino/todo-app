@@ -36,7 +36,7 @@ import {
 } from "./Categories.slice";
 
 import { tasksActions } from "../main/tasks/Tasks.slice";
-import { fetchFriends } from "../friends/Friends.slice";
+// import { fetchFriends } from "../friends/Friends.slice";
 import { findUser } from "./categories.utils";
 import { useBoundActions } from "../../app/store";
 import { useSnackbar } from "notistack";
@@ -56,7 +56,7 @@ const MenuProps = {
   },
 };
 const allActions = {
-  fetchFriends,
+  // fetchFriends,
   addCategoryAsync,
   deleteCategoryAsync,
   editCategoryAsync,
@@ -237,7 +237,7 @@ const Categories = () => {
                 renderValue={renderMembers}
                 input={<OutlinedInput label="Tag" />}
                 MenuProps={MenuProps}
-                onOpen={boundActions.fetchFriends}
+                onOpen={() => {}}
                 onChange={handleChangeMembers}
               >
                 {friends.map((friend) => (
@@ -316,7 +316,7 @@ const Categories = () => {
                 renderValue={renderMembers}
                 MenuProps={MenuProps}
                 onChange={handleChangeMembers}
-                onOpen={boundActions.fetchFriends}
+                onOpen={() => {}}
               >
                 {friends.map((friend) => (
                   <MenuItem key={friend.id} value={friend.id}>

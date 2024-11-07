@@ -10,7 +10,9 @@ import {
   acceptFriendAsync,
   addFriendAsync,
   deleteFriendAsync,
-  fetchFriends,
+  cancelRequestAsync,
+  // fetchFriends,
+  cancelInRequestAsync,
   friendsActions,
   fetchRelationsAsync,
 } from "./Friends.slice";
@@ -22,9 +24,11 @@ import Collapse from "@mui/material/Collapse";
 const allActions = {
   deleteFriendAsync,
   acceptFriendAsync,
-  fetchFriends,
+  // fetchFriends,
   addFriendAsync,
   fetchRelationsAsync,
+  cancelRequestAsync,
+  cancelInRequestAsync,
   ...friendsActions,
 };
 
@@ -41,8 +45,12 @@ const Friends = () => {
 
   const [searchInput, setSearchInput] = useState<string>("");
 
-  const handleDelete = (id: string) => boundActions.deleteFriendAsync(id);
-  const acceptFriend = (id: string) => boundActions.acceptFriendAsync(id);
+  const handleDelete = (email: string) => boundActions.deleteFriendAsync(email);
+  const handleCancelReq = (email: string) =>
+    boundActions.cancelRequestAsync(email);
+  const handleCancelInReq = (email: string) =>
+    boundActions.cancelInRequestAsync(email);
+  const acceptFriend = (email: string) => boundActions.acceptFriendAsync(email);
   const addFriend = async (email: string) => {
     await boundActions.addFriendAsync(email).unwrap();
     setSearchInput("");
@@ -82,7 +90,7 @@ const Friends = () => {
             Send request
           </button>
         </div>
-        <div className="title">PENDING</div>
+        {pending.length > 0 && <div className="title">PENDING</div>}{" "}
         <TransitionGroup>
           {pending.map((user) =>
             pending.length > 0 ? (
@@ -90,8 +98,8 @@ const Friends = () => {
                 <Pending
                   name={`${user.name} ${user.surname}`}
                   picture={user.picture}
-                  onAcceptFriend={() => acceptFriend(user.id)}
-                  onDelete={() => handleDelete(user.id)}
+                  onAcceptFriend={() => acceptFriend(user.email)}
+                  onDelete={() => handleCancelInReq(user.email)}
                 />
               </Collapse>
             ) : (
@@ -101,7 +109,7 @@ const Friends = () => {
             ),
           )}
         </TransitionGroup>
-        <div className="title">OUTGOING</div>
+        {outgoing.length > 0 && <div className="title">OUTGOING</div>}
         <TransitionGroup>
           {outgoing.map((user) =>
             outgoing.length > 0 ? (
@@ -109,7 +117,7 @@ const Friends = () => {
                 <Outgoing
                   name={`${user.name} ${user.surname}`}
                   picture={user.picture}
-                  onClick={() => handleDelete(user.id)}
+                  onClick={() => handleCancelReq(user.email)}
                 />
               </Collapse>
             ) : (
@@ -119,7 +127,7 @@ const Friends = () => {
             ),
           )}
         </TransitionGroup>
-        <div className="title">FRIENDS</div>
+        {friends.length > 0 && <div className="title">FRIENDS</div>}
         <TransitionGroup>
           {friends.map((user) =>
             friends.length > 0 ? (
@@ -127,7 +135,7 @@ const Friends = () => {
                 <Friend
                   name={`${user.name} ${user.surname}`}
                   picture={user.picture}
-                  onClick={() => handleDelete(user.id)}
+                  onClick={() => handleDelete(user.email)}
                 />
               </Collapse>
             ) : (

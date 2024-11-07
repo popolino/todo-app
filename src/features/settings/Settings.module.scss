@@ -18,8 +18,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  svg{
+  position: relative;
+  overflow: hidden;
+  & > img{
+    height: inherit;
+  }
+  & > svg{
     height: 4rem;
+  }
+  & > input{
+    opacity: 0;
+    height: inherit;
+    width: inherit;
+    position: absolute;
+    cursor: pointer;
   }
 }
 .forms {

@@ -29,6 +29,11 @@ const {
 const {
   sendFriendRequest,
   fetchRelationsAsync,
+  acceptFriendRequest,
+  acceptFriend,
+  deleteFriend,
+  cancelFriend,
+  cancelInRequest,
 } = require("./controllers/friends");
 
 const sequelize = new Sequelize(
@@ -80,6 +85,14 @@ app.delete("/tasks", deleteTasksByIds);
 app.get("/users", getUsers);
 app.get("/users/relations", authenticateToken, fetchRelationsAsync);
 app.post("/users/relations/:email", authenticateToken, sendFriendRequest);
+app.post("/users/relations/accept/:email", authenticateToken, acceptFriend);
+app.delete("/users/relations/:email", authenticateToken, deleteFriend);
+app.delete("/users/relations/cancel/:email", authenticateToken, cancelFriend);
+app.delete(
+  "/users/relations/incoming/cancel/:email",
+  authenticateToken,
+  cancelInRequest,
+);
 
 app.listen(PORT, async () => {
   try {

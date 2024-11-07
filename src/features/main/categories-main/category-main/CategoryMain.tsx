@@ -5,16 +5,16 @@ import Progress, {
 import React, { useEffect, useState } from "react";
 import Task from "../../tasks/task/Task";
 import { TCategory } from "../../../categories/Categories.types";
-import { fetchFriends } from "../../../friends/Friends.slice";
-import {
-  addCategoryAsync,
-  categoriesActions,
-  deleteCategoryAsync,
-  editCategoryAsync,
-  fetchCategories,
-} from "../../../categories/Categories.slice";
-import { fetchTasks, tasksActions } from "../../tasks/Tasks.slice";
-import { useBoundActions } from "../../../../app/store";
+// import { fetchFriends } from "../../../friends/Friends.slice";
+// import {
+//   addCategoryAsync,
+//   categoriesActions,
+//   deleteCategoryAsync,
+//   editCategoryAsync,
+//   fetchCategories,
+// } from "../../../categories/Categories.slice";
+// import { fetchTasks, tasksActions } from "../../tasks/Tasks.slice";
+// import { useBoundActions } from "../../../../app/store";
 import { TColors } from "../../../../consts/colors";
 import { set } from "react-hook-form";
 import { TUser } from "../../../friends/Friends.types";
